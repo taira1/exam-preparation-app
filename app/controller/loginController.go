@@ -2,9 +2,10 @@ package controller
 
 import "net/http"
 
-type loginController struct {
+// LoginController ログインコントローラ
+type LoginController struct {
 }
 
-func (c *loginController) process(w http.ResponseWriter, r *http.Request) map[string]interface{} {
+func (c *LoginController) process(w http.ResponseWriter, r *http.Request) map[string]interface{} {
 	return nil
 }

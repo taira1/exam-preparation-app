@@ -2,10 +2,13 @@ package routes
 
 import (
 	"exam-preparation-app/app/controller"
+	"exam-preparation-app/app/trace"
+	"net/http"
+	"os"
 )
 
-func registerTheHandler() {
-	template := &controller.TemplateHandler{Filename: "login.html"}
-
-	//http.Handle("/login", &TemplateHandler{Filename: "login.html", Controller: &loginController{}})
+// RegisterTheHandler 各種ハンドラをhttp.Handleに登録します。
+func RegisterTheHandler() {
+	http.HandleFunc("/auth/", controller.LoginHander)
+	http.Handle("/login", &controller.TemplateHandler{Filename: "login.html", Controller: &controller.LoginController{}, Tracer: trace.New(os.Stdout)})
 }

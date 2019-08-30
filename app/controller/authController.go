@@ -31,7 +31,8 @@ func mustAuth(n controller) *authController {
 	return &authController{next: n}
 }
 
-func loginHander(w http.ResponseWriter, r *http.Request) {
+// LoginHander ログインハンドラです
+func LoginHander(w http.ResponseWriter, r *http.Request) {
 	segs := strings.Split(r.URL.Path, "/")
 	action := segs[2]
 	provider := segs[3]

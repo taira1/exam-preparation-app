@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"exam-preparation-app/app/service"
 	"fmt"
 	"net/http"
 	"strings"
@@ -40,20 +41,25 @@ func LoginHander(w http.ResponseWriter, r *http.Request) {
 	case "login":
 		switch provider {
 		case "default":
-			//TODO:認証ロジックの記述
 			r.ParseForm()
-			fmt.Println("email: ", r.Form["email"])
-			fmt.Println("pass: ", r.Form["password"])
+			if service.Authenticate(r.Form["email"], r.Form["password"]) == false {
+				http.Error(w, fmt.Sprintf("認証を完了できませんでした。"), http.StatusInternalServerError)
+				return //TODO: エラーページへリダイレクトする
+			}
+			loginURL := "/auth/callback/default"
+			w.Header().Set("Location", loginURL)
+			w.WriteHeader(http.StatusTemporaryRedirect)
+
 		default:
 			provider, err := gomniauth.Provider(provider)
 			if err != nil {
 				http.Error(w, fmt.Sprintf("認証プロバイダの取得に失敗しました。 %s: %s", provider, err), http.StatusBadRequest)
-				return
+				return //TODO: エラーページへリダイレクトする
 			}
 			loginURL, err := provider.GetBeginAuthURL(nil, nil)
 			if err != nil {
 				http.Error(w, fmt.Sprintf("GetBeginAuthURLの呼び出し中にエラーが発生しました。 %s: %s", provider, err), http.StatusInternalServerError)
-				return
+				return //TODO: エラーページへリダイレクトする
 			}
 			w.Header().Set("Location", loginURL)
 			w.WriteHeader(http.StatusTemporaryRedirect)
@@ -61,24 +67,24 @@ func LoginHander(w http.ResponseWriter, r *http.Request) {
 	case "callback":
 		switch provider {
 		case "default":
-			//TODO:認証ロジックからクッキー生成ロジックを追加
+			//TODO:認証したユーザをDBから取得してCookieにUser情報を書き込む
 		default:
 			provider, err := gomniauth.Provider(provider)
 			if err != nil {
 				http.Error(w, fmt.Sprintf("認証プロバイダの取得に失敗しました。%s: %s", provider, err), http.StatusBadRequest)
-				return
+				return //TODO: エラーページへリダイレクトする
 			}
 
 			creds, err := provider.CompleteAuth(objx.MustFromURLQuery(r.URL.RawQuery))
 			if err != nil {
 				http.Error(w, fmt.Sprintf("認証を完了できませんでした。%s: %s", provider, err), http.StatusInternalServerError)
-				return
+				return //TODO: エラーページへリダイレクトする
 			}
 
 			user, err := provider.GetUser(creds)
 			if err != nil {
 				http.Error(w, fmt.Sprintf("ユーザーの取得に失敗しました。 %s: %s", provider, err), http.StatusInternalServerError)
-				return
+				return //TODO: エラーページへリダイレクトする
 			}
 
 			// save some data
@@ -88,7 +94,7 @@ func LoginHander(w http.ResponseWriter, r *http.Request) {
 			http.SetCookie(w, &http.Cookie{
 				Name:  "auth",
 				Value: authCookieValue,
-				Path:  "/"})
+				Path:  "/"}) //TODO: Pathが"/"なのはセキュリティ上よくないので、厳密に指定する。
 
 			w.Header().Set("Location", "/chat")
 			w.WriteHeader(http.StatusTemporaryRedirect)

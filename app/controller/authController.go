@@ -46,7 +46,10 @@ func LoginHander(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, fmt.Sprintf("認証を完了できませんでした。"), http.StatusInternalServerError)
 				return //TODO: エラーページへリダイレクトする
 			}
-			loginURL := "/auth/callback/default"
+
+			//TODO:認証したユーザをDBから取得してCookieにUser情報を書き込む
+			//TODO:アカウントページにリダイレクト
+			loginURL := "/"
 			w.Header().Set("Location", loginURL)
 			w.WriteHeader(http.StatusTemporaryRedirect)
 
@@ -65,39 +68,34 @@ func LoginHander(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusTemporaryRedirect)
 		}
 	case "callback":
-		switch provider {
-		case "default":
-			//TODO:認証したユーザをDBから取得してCookieにUser情報を書き込む
-		default:
-			provider, err := gomniauth.Provider(provider)
-			if err != nil {
-				http.Error(w, fmt.Sprintf("認証プロバイダの取得に失敗しました。%s: %s", provider, err), http.StatusBadRequest)
-				return //TODO: エラーページへリダイレクトする
-			}
-
-			creds, err := provider.CompleteAuth(objx.MustFromURLQuery(r.URL.RawQuery))
-			if err != nil {
-				http.Error(w, fmt.Sprintf("認証を完了できませんでした。%s: %s", provider, err), http.StatusInternalServerError)
-				return //TODO: エラーページへリダイレクトする
-			}
-
-			user, err := provider.GetUser(creds)
-			if err != nil {
-				http.Error(w, fmt.Sprintf("ユーザーの取得に失敗しました。 %s: %s", provider, err), http.StatusInternalServerError)
-				return //TODO: エラーページへリダイレクトする
-			}
-
-			// save some data
-			authCookieValue := objx.New(map[string]interface{}{
-				"name": user.Name(),
-			}).MustBase64()
-			http.SetCookie(w, &http.Cookie{
-				Name:  "auth",
-				Value: authCookieValue,
-				Path:  "/"}) //TODO: Pathが"/"なのはセキュリティ上よくないので、厳密に指定する。
-
-			w.Header().Set("Location", "/chat")
-			w.WriteHeader(http.StatusTemporaryRedirect)
+		provider, err := gomniauth.Provider(provider)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("認証プロバイダの取得に失敗しました。%s: %s", provider, err), http.StatusBadRequest)
+			return //TODO: エラーページへリダイレクトする
 		}
+
+		creds, err := provider.CompleteAuth(objx.MustFromURLQuery(r.URL.RawQuery))
+		if err != nil {
+			http.Error(w, fmt.Sprintf("認証を完了できませんでした。%s: %s", provider, err), http.StatusInternalServerError)
+			return //TODO: エラーページへリダイレクトする
+		}
+
+		user, err := provider.GetUser(creds)
+		if err != nil {
+			http.Error(w, fmt.Sprintf("ユーザーの取得に失敗しました。 %s: %s", provider, err), http.StatusInternalServerError)
+			return //TODO: エラーページへリダイレクトする
+		}
+
+		// save some data
+		authCookieValue := objx.New(map[string]interface{}{
+			"name": user.Name(),
+		}).MustBase64()
+		http.SetCookie(w, &http.Cookie{
+			Name:  "auth",
+			Value: authCookieValue,
+			Path:  "/"}) //TODO: Pathが"/"なのはセキュリティ上よくないので、厳密に指定する。
+
+		w.Header().Set("Location", "/chat")
+		w.WriteHeader(http.StatusTemporaryRedirect)
 	}
 }

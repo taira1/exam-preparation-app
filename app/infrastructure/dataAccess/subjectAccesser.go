@@ -14,7 +14,7 @@ type SubjectAccesser struct {
 
 // FindByFacultyID 指定したFacultyIDの学科一覧を取得します。
 func (a *SubjectAccesser) FindByFacultyID(facultyID int) []model.Subject {
-	rows, err := a.DBAgent.conn.Query(fmt.Sprintf("SELECT * FROM subject WHERE faculty_id = %d;", facultyID))
+	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM subject WHERE faculty_id = %d;", facultyID))
 	if err != nil {
 		log.Println("データの取得に失敗しました。")
 		return nil
@@ -34,7 +34,7 @@ func (a *SubjectAccesser) FindByFacultyID(facultyID int) []model.Subject {
 
 // FindByID 指定したIDの学科を取得します。
 func (a *SubjectAccesser) FindByID(ID int) *model.Subject {
-	rows, err := a.DBAgent.conn.Query(fmt.Sprintf("SELECT * FROM subject WHERE id = %d;", ID))
+	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM subject WHERE id = %d;", ID))
 	if err != nil {
 		log.Println("データの取得に失敗しました。")
 		return nil

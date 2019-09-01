@@ -14,7 +14,7 @@ type UserAccesser struct {
 
 // FindBySubjectID 指定したSubjectIDのユーザ一覧を取得します。
 func (a *UserAccesser) FindBySubjectID(subjectID int) []model.User {
-	rows, err := a.DBAgent.conn.Query(fmt.Sprintf("SELECT * FROM user WHERE subject_id = %d;", subjectID))
+	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM user WHERE subject_id = %d;", subjectID))
 	if err != nil {
 		log.Println("データの取得に失敗しました。")
 		return nil
@@ -34,7 +34,7 @@ func (a *UserAccesser) FindBySubjectID(subjectID int) []model.User {
 
 // FindByID 指定したIDのユーザを取得します。
 func (a *UserAccesser) FindByID(ID int) *model.User {
-	rows, err := a.DBAgent.conn.Query(fmt.Sprintf("SELECT * FROM user WHERE id = %d;", ID))
+	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM user WHERE id = %d;", ID))
 	if err != nil {
 		log.Println("データの取得に失敗しました。")
 		return nil

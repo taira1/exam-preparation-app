@@ -7,14 +7,14 @@ import (
 
 // DBAgent DBへのコネクションを保持します。
 type DBAgent struct {
-	conn *sql.DB
+	Conn *sql.DB
 }
 
 // NewDbAgent コンストラクタです
 func NewDbAgent() *DBAgent {
 	if c, err := getDBConnection(); err == nil {
 		log.Println("DbAgentを生成しました")
-		return &DBAgent{conn: c}
+		return &DBAgent{Conn: c}
 	}
 	log.Println("DbAgentを生成できませんでした")
 	return nil

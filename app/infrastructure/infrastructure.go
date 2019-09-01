@@ -1,6 +1,9 @@
 package infrastructure
 
-import "exam-preparation-app/app/infrastructure/dataAccess"
+import (
+	"exam-preparation-app/app/infrastructure/dataAccess"
+	"log"
+)
 
 // Infrastructure インフラ
 type Infrastructure struct {
@@ -9,6 +12,7 @@ type Infrastructure struct {
 	SubjectAccesser    *dataAccess.SubjectAccesser
 	UserAccesser       *dataAccess.UserAccesser
 	AuthAccesser       *dataAccess.AuthAccesser
+	DBAgent            *dataAccess.DBAgent
 }
 
 func newUniversityAccesser(dbAgent *dataAccess.DBAgent) *dataAccess.UniversityAccesser {
@@ -40,10 +44,19 @@ func NewInfrastructure() *Infrastructure {
 	authAccesser := newAuthAccesser(dbAgent)
 
 	return &Infrastructure{
+		DBAgent:            dbAgent,
 		UniversityAccesser: universityAccesser,
 		FacultyAccesser:    facultyAccesser,
 		SubjectAccesser:    subjectAccesser,
 		UserAccesser:       userAccesser,
 		AuthAccesser:       authAccesser,
+	}
+}
+
+// Close dbコネクションをクローズします。
+func (i *Infrastructure) Close() {
+	err := i.DBAgent.Conn.Close()
+	if err != nil {
+		log.Println("DBコネクションを正常に終了できませんでした。")
 	}
 }

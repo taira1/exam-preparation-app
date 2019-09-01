@@ -13,7 +13,7 @@ type UniversityAccesser struct {
 
 // FindAll すべての大学を取得します。
 func (a *UniversityAccesser) FindAll() []model.University {
-	rows, err := a.DBAgent.conn.Query("SELECT * FROM university;")
+	rows, err := a.DBAgent.Conn.Query("SELECT * FROM university;")
 	if err != nil {
 		log.Println("データの取得に失敗しました。")
 		return nil
@@ -32,7 +32,7 @@ func (a *UniversityAccesser) FindAll() []model.University {
 
 // FindByID 指定したIDの大学を取得します。
 func (a *UniversityAccesser) FindByID(ID int) *model.University {
-	rows, err := a.DBAgent.conn.Query(fmt.Sprintf("SELECT * FROM university WHERE id = %d;", ID))
+	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM university WHERE id = %d;", ID))
 	if err != nil {
 		log.Println("データの取得に失敗しました。")
 		return nil

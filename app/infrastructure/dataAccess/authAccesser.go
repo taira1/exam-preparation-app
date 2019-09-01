@@ -13,7 +13,7 @@ type AuthAccesser struct {
 
 // FindByEmail 指定したemailのAuthを取得します。
 func (a *AuthAccesser) FindByEmail(email string) *model.Auth {
-	rows, err := a.DBAgent.conn.Query(fmt.Sprintf("SELECT * FROM auth WHERE email = '%s';", email))
+	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM auth WHERE email = '%s';", email))
 	if err != nil {
 		log.Println("データの取得に失敗しました。")
 		return nil

@@ -24,7 +24,7 @@ func (v *Validater) ValidateEmail(email string) bool {
 // ValidateUnique メールアドレスの一意性を検証します。
 func (v *Validater) ValidateUnique(email string) bool {
 	if infrastructure.InfrastructureOBJ.AuthAccesser.FindByEmail(email) != nil {
-		log.Println("すでに存在するメールアドレスです。")
+		log.Println("すでに登録済のメールアドレスです。")
 		return false
 	}
 	return true

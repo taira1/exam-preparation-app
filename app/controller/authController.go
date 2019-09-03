@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"exam-preparation-app/app/infrastructure"
 	"exam-preparation-app/app/service"
 	"fmt"
 	"net/http"
@@ -42,14 +43,21 @@ func LoginHander(w http.ResponseWriter, r *http.Request) {
 		switch provider {
 		case "default":
 			r.ParseForm()
-			if service.Authenticate(r.Form["email"], r.Form["password"]) == false {
+			userID := service.Authenticate(&r.Form["email"][0], &r.Form["password"][0])
+			if userID == -1 {
 				http.Error(w, fmt.Sprintf("認証を完了できませんでした。"), http.StatusInternalServerError)
 				return //TODO: エラーページへリダイレクトする
 			}
+			user := infrastructure.InfrastructureOBJ.UserAccesser.FindByID(userID)
+			authCookieValue := objx.New(map[string]interface{}{
+				"user": user,
+			}).MustBase64()
+			http.SetCookie(w, &http.Cookie{
+				Name:  "auth",
+				Value: authCookieValue,
+				Path:  "/"}) //TODO: Pathが"/"なのはセキュリティ上よくないので、厳密に指定する。
 
-			//TODO:認証したユーザをDBから取得してCookieにUser情報を書き込む
-			//TODO:アカウントページにリダイレクト
-			loginURL := "/"
+			loginURL := "/" //TODO:アカウントページにリダイレクト
 			w.Header().Set("Location", loginURL)
 			w.WriteHeader(http.StatusTemporaryRedirect)
 

@@ -5,6 +5,9 @@ import (
 	"log"
 )
 
+// InfrastructureOBJ インフラのオブジェクトです。
+var InfrastructureOBJ = newInfrastructure()
+
 // Infrastructure インフラ
 type Infrastructure struct {
 	UniversityAccesser *dataAccess.UniversityAccesser
@@ -21,21 +24,18 @@ func newUniversityAccesser(dbAgent *dataAccess.DBAgent) *dataAccess.UniversityAc
 func newFacultyAccesser(dbAgent *dataAccess.DBAgent, accesser *dataAccess.UniversityAccesser) *dataAccess.FacultyAccesser {
 	return &dataAccess.FacultyAccesser{DBAgent: dbAgent, UniversityAccesser: accesser}
 }
-
 func newSubjectAccesser(dbAgent *dataAccess.DBAgent, accesser *dataAccess.FacultyAccesser) *dataAccess.SubjectAccesser {
 	return &dataAccess.SubjectAccesser{DBAgent: dbAgent, FacultyAccesser: accesser}
 }
-
 func newUserAccesser(dbAgent *dataAccess.DBAgent, accesser *dataAccess.SubjectAccesser) *dataAccess.UserAccesser {
 	return &dataAccess.UserAccesser{DBAgent: dbAgent, SubjectAccesser: accesser}
 }
-
 func newAuthAccesser(dbAgent *dataAccess.DBAgent) *dataAccess.AuthAccesser {
 	return &dataAccess.AuthAccesser{DBAgent: dbAgent}
 }
 
-// NewInfrastructure コンストラクタです。
-func NewInfrastructure() *Infrastructure {
+// コンストラクタです。
+func newInfrastructure() *Infrastructure {
 	dbAgent := dataAccess.NewDbAgent()
 	universityAccesser := newUniversityAccesser(dbAgent)
 	facultyAccesser := newFacultyAccesser(dbAgent, universityAccesser)

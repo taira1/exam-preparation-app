@@ -1,6 +1,7 @@
 package main
 
 import (
+	"exam-preparation-app/app/infrastructure"
 	"exam-preparation-app/app/routes"
 	"flag"
 	"log"
@@ -15,4 +16,5 @@ func main() {
 	if err := http.ListenAndServe(*addr, nil); err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}
+	defer infrastructure.InfrastructureOBJ.Close()
 }

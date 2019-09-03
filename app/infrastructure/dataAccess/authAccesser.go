@@ -21,9 +21,24 @@ func (a *AuthAccesser) FindByEmail(email string) *model.Auth {
 	defer rows.Close()
 	auth := model.Auth{}
 	for rows.Next() {
-		if err := rows.Scan(&auth.ID, &auth.Email, &auth.UserID); err != nil {
+		if err := rows.Scan(&auth.ID, &auth.Email, &auth.Password, &auth.UserID); err != nil {
 			log.Println("クエリの発行に失敗しました。")
+			return nil
 		}
 	}
 	return &auth
+}
+
+// Insert 引数で受け取ったauth,Userをインサートします。
+func (a *AuthAccesser) Insert(auth *model.Auth, userID int) {
+	ins, err := a.DBAgent.Conn.Prepare("INSERT INTO auth(email,password,user_id) VALUES(?,?,?)")
+	if err != nil {
+		log.Fatal(err)
+		err = nil
+		return
+	}
+	ins.Exec(auth.Email, auth.Password, userID)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

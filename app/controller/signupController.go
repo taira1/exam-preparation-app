@@ -15,9 +15,9 @@ func (c *SignupController) process(w http.ResponseWriter, r *http.Request) map[s
 // SigunpHandler サインアップハンドラ
 func SigunpHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	email := r.Form["email"]
-	password := r.Form["password"]
-	university := r.Form["university"]
+	// email := r.Form["email"]
+	// password := r.Form["password"]
+	// university := r.Form["university"]
 	//アカウント作成に必要な情報
 	//email, password
 	//user_name 学歴

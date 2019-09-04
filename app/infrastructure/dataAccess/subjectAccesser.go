@@ -12,6 +12,27 @@ type SubjectAccesser struct {
 	FacultyAccesser *FacultyAccesser
 }
 
+// FindAll 学科一覧を取得します。
+func (a *SubjectAccesser) FindAll() []model.Subject {
+	rows, err := a.DBAgent.Conn.Query("SELECT * FROM subject")
+	if err != nil {
+		log.Println("データの取得に失敗しました。")
+		return nil
+	}
+	defer rows.Close()
+	var subjectResult []model.Subject
+	var facultyID int
+	for rows.Next() {
+		subject := model.Subject{}
+		if err := rows.Scan(&subject.ID, &subject.Name, &facultyID); err != nil {
+			log.Println("クエリの発行に失敗しました。")
+		}
+		*subject.Faculty = *a.FacultyAccesser.FindByID(facultyID)
+		subjectResult = append(subjectResult, subject)
+	}
+	return subjectResult
+}
+
 // FindByFacultyID 指定したFacultyIDの学科一覧を取得します。
 func (a *SubjectAccesser) FindByFacultyID(facultyID int) []model.Subject {
 	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM subject WHERE faculty_id = %d;", facultyID))

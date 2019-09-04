@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <title>新規アカウント作成</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script>
+        const f = new Map();
+        {{range .Faculties}}
+            f.set("{{.ID}}","{{.}}");
+        {{end}}
+
+        const s = new Map();
+        {{range .Subjects}}
+            f.set("{{.ID}}","{{.}}");
+        {{end}}
+
+        window.onload=function(){
+            for(var i=0;i<arr.length;i++){
+            let op = document.createElement("option");
+            op.value = arr[i].cd;
+            op.text = arr[i].label;
+            document.getElementById("selPref").appendChild(op);
+            }
+        }
+        // TODO: ここを参考に実装しよう https://javascript.programmer-reference.com/js-selectbox-linkage/
+        // TODO: ここを参考に実装しよう https://astaxie.gitbooks.io/build-web-application-with-golang/content/ja/07.4.html
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header">
+        <h1>新規アカウント作成</h1>
+      </div>
+      <div class="panel panel-danger">
+        <div class="panel-heading">
+          <h3 class="panel-title">全ての機能を使うためにアカウントを作成してください</h3>
+        </div>
+        <div class="panel-body">
+            
+            <form action="/auth/login/default" method="post" class="form-horizontal">
+                
+                <div class="form-group">
+                    <label for="input_name" class="col-md-2 control-label">大学：</label>
+                    <div class="col-md-10">
+                        <select name="university" onchange=selUniv(this);>
+                            {{range .Universities}}
+                                <option value="{{.ID}}">{{.Name}}</option>
+                            {{end}}
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="input_name" class="col-md-2 control-label">メールアドレス：</label>
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="login_name" placeholder="Name" name="email" /><br />
+                    </div>
+                </div>
+                        
+                <div class="form-group">
+                    <label for="input_password" class="col-md-2 control-label">パスワード：</label>
+                    <div class="col-md-10">
+                        <input type="password" class="form-control" id="input_password" placeholder="Password" name="password" /></label><br />
+                    </div>
+                </div>
+                        
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="submit" class="btn btn-primary btn-block">作成</button>
+                    </div>
+                </div>
+            </form>      
+
+
+          <p>または</p>
+          <ul>
+            <li>
+              <a href="/auth/login/facebook">Facebook</a>
+            </li>
+            <li>
+              <a href="/auth/login/google">Google</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

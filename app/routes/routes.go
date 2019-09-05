@@ -16,9 +16,20 @@ func RegisterTheHandler() {
 		Tracer:     trace.New(os.Stdout),
 	})
 	http.HandleFunc("/signup/post", controller.SigunpHandler)
+	http.Handle("/signup/complete", &controller.TemplateHandler{
+		Filename:   "complete.html",
+		Controller: &controller.CompleteController{},
+		Tracer:     trace.New(os.Stdout),
+	})
 	http.Handle("/signup", &controller.TemplateHandler{
 		Filename:   "sigunup.html",
 		Controller: &controller.SignupController{},
 		Tracer:     trace.New(os.Stdout),
 	})
+
+	// TODO: ユーザの記事一覧などのハンドリングを考える。
+	// http.Handler("/User/", &controller.TemplateHandler{
+	// 	Filename: "User"
+	// })
+
 }

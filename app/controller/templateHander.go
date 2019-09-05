@@ -22,7 +22,9 @@ func (t *TemplateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t.once.Do(func() {
 		t.templ = template.Must(template.ParseFiles(filepath.Join("../views/templates", t.Filename)))
 	})
-	data := t.Controller.process(w, r)
+	data := map[string]interface{}{
+		"Host": r.Host,
+	}
+	data = t.Controller.process(w, r)
 	t.templ.Execute(w, data)
-
 }

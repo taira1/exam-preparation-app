@@ -57,8 +57,8 @@ func LoginHander(w http.ResponseWriter, r *http.Request) {
 				Value: authCookieValue,
 				Path:  "/"}) //TODO: Pathが"/"なのはセキュリティ上よくないので、厳密に指定する。
 
-			loginURL := "/" //TODO:アカウントページにリダイレクト
-			w.Header().Set("Location", loginURL)
+			userPageURL := "/" //TODO:アカウントページにリダイレクト
+			w.Header().Set("Location", userPageURL)
 			w.WriteHeader(http.StatusTemporaryRedirect)
 
 		default:

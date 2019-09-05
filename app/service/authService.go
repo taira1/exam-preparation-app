@@ -24,7 +24,7 @@ func Authenticate(email *string, pass *string) int {
 
 // ValidateAuth 認証情報の妥当性を検証します
 func (s *AuthService) ValidateAuth(email string) bool {
-	if s.Validater.ValidateUnique(email) == false {
+	if s.Validater.ValidateEmailUnique(email) == false {
 		return false
 	}
 	if s.Validater.ValidateEmail(email) == false {

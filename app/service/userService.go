@@ -1,9 +1,6 @@
 package service
 
-import (
-	"exam-preparation-app/app/infrastructure"
-)
+// いらない可能性が高い。
 
 type userService struct {
-	Infrastructure *infrastructure.Infrastructure
 }

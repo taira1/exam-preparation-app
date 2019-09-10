@@ -22,7 +22,7 @@ func RegisterTheHandler() {
 		Tracer:     trace.New(os.Stdout),
 	})
 	http.Handle("/signup", &controller.TemplateHandler{
-		Filename:   "sigunup.html",
+		Filename:   "signup.html",
 		Controller: &controller.SignupController{},
 		Tracer:     trace.New(os.Stdout),
 	})

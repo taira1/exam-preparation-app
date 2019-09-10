@@ -15,7 +15,7 @@ type UniversityAccesser struct {
 func (a *UniversityAccesser) FindAll() []model.University {
 	rows, err := a.DBAgent.Conn.Query("SELECT * FROM university;")
 	if err != nil {
-		log.Println("データの取得に失敗しました。")
+		log.Fatalf("データの取得に失敗しました。%#v", err)
 		return nil
 	}
 	defer rows.Close()
@@ -23,7 +23,7 @@ func (a *UniversityAccesser) FindAll() []model.University {
 	for rows.Next() {
 		university := model.University{}
 		if err := rows.Scan(&university.ID, &university.Name); err != nil {
-			log.Println("クエリの発行に失敗しました。")
+			log.Fatalf("クエリの発行に失敗しました。%#v", err)
 		}
 		universitiesResult = append(universitiesResult, university)
 	}
@@ -34,14 +34,14 @@ func (a *UniversityAccesser) FindAll() []model.University {
 func (a *UniversityAccesser) FindByID(ID int) *model.University {
 	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM university WHERE id = %d;", ID))
 	if err != nil {
-		log.Println("データの取得に失敗しました。")
+		log.Fatalf("データの取得に失敗しました。%#v", err)
 		return nil
 	}
 	defer rows.Close()
 	university := model.University{}
 	for rows.Next() {
 		if err := rows.Scan(&university.ID, &university.Name); err != nil {
-			log.Println("クエリの発行に失敗しました。")
+			log.Fatalf("クエリの発行に失敗しました。%#v", err)
 		}
 	}
 	return &university

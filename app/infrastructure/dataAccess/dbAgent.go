@@ -3,6 +3,9 @@ package dataAccess
 import (
 	"database/sql"
 	"log"
+
+	//mysplのドライバを使用
+	_ "github.com/go-sql-driver/mysql"
 )
 
 // DBAgent DBへのコネクションを保持します。
@@ -12,11 +15,12 @@ type DBAgent struct {
 
 // NewDbAgent コンストラクタです
 func NewDbAgent() *DBAgent {
-	if c, err := getDBConnection(); err == nil {
+	c, err := getDBConnection()
+	if err == nil {
 		log.Println("DbAgentを生成しました")
 		return &DBAgent{Conn: c}
 	}
-	log.Println("DbAgentを生成できませんでした")
+	log.Fatalf("DbAgentを生成できませんでした %#v", err)
 	return nil
 }
 

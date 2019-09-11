@@ -26,7 +26,7 @@ func (a *UserAccesser) FindBySubjectID(subjectID int) []model.User {
 		if err := rows.Scan(&user.ID, &user.Name); err != nil {
 			log.Println("クエリの発行に失敗しました。")
 		}
-		*user.Education = *a.SubjectAccesser.FindByID(subjectID)
+		user.Education = a.SubjectAccesser.FindByID(subjectID)
 		userResult = append(userResult, user)
 	}
 	return userResult
@@ -46,7 +46,7 @@ func (a *UserAccesser) FindByID(ID int) *model.User {
 		if err := rows.Scan(&user.ID, &user.Name, &subjectID); err != nil {
 			log.Println("クエリの発行に失敗しました。")
 		}
-		*user.Education = *a.SubjectAccesser.FindByID(subjectID)
+		user.Education = a.SubjectAccesser.FindByID(subjectID)
 	}
 	return &user
 }

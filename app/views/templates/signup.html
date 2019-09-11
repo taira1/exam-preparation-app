@@ -5,24 +5,60 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script>
-        const f = new Map();
+        // const f = new Map();
+        // {{range .Faculties}}
+        //     f.set("{{.ID}}","{{.}}");
+        // {{end}}
+        
+        const f = new Array();
         {{range .Faculties}}
-            f.set("{{.ID}}","{{.}}");
+            f.push(
+              {id:"{{.ID}}",name:"{{.Name}}",UniversityID:"{{.University.ID}}"}
+              );
         {{end}}
 
-        const s = new Map();
+
+        const s = new Array();
         {{range .Subjects}}
-            f.set("{{.ID}}","{{.}}");
+            s.push(
+              {id:"{{.ID}}",name:"{{.Name}}",FacultyID:"{{.Faculty.ID}}"}
+              );
         {{end}}
 
-        window.onload=function(){
-            for(var i=0;i<arr.length;i++){
-            let op = document.createElement("option");
-            op.value = arr[i].cd;
-            op.text = arr[i].label;
-            document.getElementById("selPref").appendChild(op);
+        function selUniv(obj){
+          var selObj = document.getElementById('Facu');
+          var displayFaculties = Array();
+          for (var i=0;i<f.length;i++) {
+            if (f[i].UniversityID==obj.value){
+              displayFaculties.push(f[i]);
             }
+          }
+          for(i=0;displayFaculties.length;i++) {
+            let op = document.createElement("option");
+            op.value = displayFaculties[i].id;
+            op.text = displayFaculties[i].name;
+            selObj.appendChild(op);
+          }
         }
+
+        function selFacu(obj){
+          var selObj = document.getElementById('Subj');
+          var displaySubjects = Array();
+          for (var i=0;i<s.length;i++) {
+            if (s[i].FacultyID==obj.value){
+              displaySubjects.push(s[i]);
+              console.log(i);
+            }
+          }
+          for(i=0;displaySubjects.length;i++) {
+            let op = document.createElement("option");
+            op.value = displaySubjects[i].id;
+            op.text = displaySubjects[i].name;
+            selObj.appendChild(op);
+          }
+        }
+
+        
         // TODO: ここを参考に実装しよう https://javascript.programmer-reference.com/js-selectbox-linkage/
         // TODO: ここを参考に実装しよう https://astaxie.gitbooks.io/build-web-application-with-golang/content/ja/07.4.html
     </script>
@@ -38,12 +74,13 @@
         </div>
         <div class="panel-body">
             
-            <form action="/auth/login/default" method="post" class="form-horizontal">
+            <form action="/signup/post" method="post" class="form-horizontal" data-toggle="validator">
                 
                 <div class="form-group">
                     <label for="input_name" class="col-md-2 control-label">大学：</label>
                     <div class="col-md-10">
-                        <select name="university" onchange=selUniv(this);>
+                        <select name="" required onchange=selUniv(this);>
+                            <option selected>---</option>
                             {{range .Universities}}
                                 <option value="{{.ID}}">{{.Name}}</option>
                             {{end}}
@@ -52,16 +89,41 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="input_name" class="col-md-2 control-label">メールアドレス：</label>
+                    <label for="input_name" class="col-md-2 control-label">学部：</label>
                     <div class="col-md-10">
-                        <input type="text" class="form-control" id="login_name" placeholder="Name" name="email" /><br />
+                        <select id="Facu" name="" required onchange=selFacu(this);>
+                            <option selected>---</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="input_name" class="col-md-2 control-label">学科：</label>
+                    <div class="col-md-10">
+                        <select id="Subj" name="subject" required>
+                            <option selected>---</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="input_name" class="col-md-2 control-label">ニックネーム(変更可能)：</label>
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="login_name" placeholder="ニックネーム" name="userName" data-error="ニックネームは必須です。" required /><br />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="input_email" class="col-md-2 control-label">メールアドレス：</label>
+                    <div class="col-md-10">
+                        <input type="text" class="form-control" id="login_email" placeholder="メールアドレス" name="email" data-error="メールアドレスは必須です" required /><br />
                     </div>
                 </div>
                         
                 <div class="form-group">
                     <label for="input_password" class="col-md-2 control-label">パスワード：</label>
                     <div class="col-md-10">
-                        <input type="password" class="form-control" id="input_password" placeholder="Password" name="password" /></label><br />
+                        <input type="password" class="form-control" id="input_password" placeholder="パスワード" name="password" data-error="パスワードは必須です" required /></label><br />
                     </div>
                 </div>
                         
@@ -73,7 +135,7 @@
             </form>      
 
 
-          <p>または</p>
+          <p>チャット機能のみを利用する場合は</p>
           <ul>
             <li>
               <a href="/auth/login/facebook">Facebook</a>

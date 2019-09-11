@@ -27,7 +27,7 @@ func (c *SignupController) process(w http.ResponseWriter, r *http.Request) map[s
 
 // SigunpHandler サインアップハンドラ
 func SigunpHandler(w http.ResponseWriter, r *http.Request) {
-	v := service.Validater{}
+	v := service.NewValidater()
 	r.ParseForm()
 	userName := r.FormValue("userName")
 	email := r.FormValue("email")

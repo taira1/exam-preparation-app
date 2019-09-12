@@ -46,7 +46,7 @@ func SigunpHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if !v.ValidatePasswordLength(password) {
-		http.Error(w, "パスワードは8文字以上7文字以内に設定してください", http.StatusInternalServerError)
+		http.Error(w, "パスワードは8文字以上70文字以内に設定してください", http.StatusInternalServerError)
 		return
 	}
 	if !v.ValidateExistenceOfSubject(subjectID) {

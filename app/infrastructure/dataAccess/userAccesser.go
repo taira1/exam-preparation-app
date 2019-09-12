@@ -53,15 +53,14 @@ func (a *UserAccesser) FindByID(ID int) *model.User {
 
 // Insert 引数で渡したuserをDBに登録,自動採番されたIDを返す。
 func (a *UserAccesser) Insert(u *model.User) int {
-	ins, err := a.DBAgent.Conn.Prepare("INSERT INTO auth(name,education_id) VALUES(?,?)")
+	ins, err := a.DBAgent.Conn.Prepare("INSERT INTO user(name,education_id) VALUES(?,?)")
 	if err != nil {
 		log.Fatal(err)
 		err = nil
 		return -1
 	}
-	ins.Exec(u.Name, u.Education.ID)
-	if err != nil {
-		log.Fatal(err)
+	if _, e := ins.Exec(u.Name, u.Education.ID); e != nil {
+		log.Fatal(e)
 		return -1
 	}
 	return GetAutoNumberedID(a.DBAgent)

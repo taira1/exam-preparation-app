@@ -26,6 +26,10 @@ func (a *AuthAccesser) FindByEmail(email string) *model.Auth {
 			return nil
 		}
 	}
+	if auth.ID == 0 {
+		log.Println("指定したemailは未登録です。")
+		return nil
+	}
 	return &auth
 }
 
@@ -37,8 +41,7 @@ func (a *AuthAccesser) Insert(auth *model.Auth, userID int) {
 		err = nil
 		return
 	}
-	ins.Exec(auth.Email, auth.Password, userID)
-	if err != nil {
+	if _, e := ins.Exec(auth.Email, auth.Password, userID); e != nil {
 		log.Fatal(err)
 	}
 }

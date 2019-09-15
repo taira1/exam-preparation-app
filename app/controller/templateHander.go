@@ -4,27 +4,29 @@ import (
 	"exam-preparation-app/app/trace"
 	"html/template"
 	"net/http"
-	"path/filepath"
-	"sync"
+	"os"
 )
 
 // TemplateHandler テンプレートハンドラ
 type TemplateHandler struct {
-	once       sync.Once
-	Filename   string
 	templ      *template.Template
 	Controller controller
 	Tracer     trace.Tracer
 }
 
 func (t *TemplateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	//テンプレートのコンパイル
-	t.once.Do(func() {
-		t.templ = template.Must(template.ParseFiles(filepath.Join("../views/templates", t.Filename)))
-	})
 	data := map[string]interface{}{
 		"Host": r.Host,
 	}
 	data = t.Controller.process(w, r)
+	t.templ = t.Controller.specifyTemplate()
 	t.templ.Execute(w, data)
+}
+
+// NewTemplateHandler コンストラクタです
+func NewTemplateHandler(c controller) *TemplateHandler {
+	return &TemplateHandler{
+		Controller: c,
+		Tracer:     trace.New(os.Stdout),
+	}
 }

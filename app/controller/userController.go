@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"html/template"
 	"net/http"
 
 	"github.com/stretchr/objx"
@@ -19,4 +20,8 @@ func process(w http.ResponseWriter, r *http.Request) map[string]interface{} {
 		}
 	}
 	return nil
+}
+
+func (c *UserController) specifyTemplate() *template.Template {
+	return templateHelperOBJ.compiledTemplates["これから書く.html"]
 }

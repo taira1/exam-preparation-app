@@ -5,6 +5,7 @@ import (
 	"exam-preparation-app/app/infrastructure"
 	"exam-preparation-app/app/service"
 	"fmt"
+	"html/template"
 	"net/http"
 	"strconv"
 )
@@ -23,6 +24,10 @@ func (c *SignupController) process(w http.ResponseWriter, r *http.Request) map[s
 		"Subjects":     subjects,
 	}
 	return data
+}
+
+func (c *SignupController) specifyTemplate() *template.Template {
+	return templateHelperOBJ.compiledTemplates["signup.html"]
 }
 
 // SigunpHandler サインアップハンドラ

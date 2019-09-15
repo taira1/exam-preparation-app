@@ -4,6 +4,7 @@ import (
 	"exam-preparation-app/app/infrastructure"
 	"exam-preparation-app/app/service"
 	"fmt"
+	"html/template"
 	"net/http"
 	"strings"
 
@@ -27,6 +28,10 @@ func (h *authController) process(w http.ResponseWriter, r *http.Request) map[str
 		return nil
 	}
 	return h.next.process(w, r)
+}
+
+func (h *authController) specifyTemplate() *template.Template {
+	return h.next.specifyTemplate()
 }
 
 func mustAuth(n controller) *authController {

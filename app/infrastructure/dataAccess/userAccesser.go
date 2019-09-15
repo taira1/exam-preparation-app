@@ -16,7 +16,7 @@ type UserAccesser struct {
 func (a *UserAccesser) FindBySubjectID(subjectID int) []model.User {
 	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM user WHERE subject_id = %d;", subjectID))
 	if err != nil {
-		log.Println("データの取得に失敗しました。")
+		log.Fatalf("データの取得に失敗しました。%#v", err)
 		return nil
 	}
 	defer rows.Close()
@@ -24,7 +24,7 @@ func (a *UserAccesser) FindBySubjectID(subjectID int) []model.User {
 	for rows.Next() {
 		user := model.User{}
 		if err := rows.Scan(&user.ID, &user.Name); err != nil {
-			log.Println("クエリの発行に失敗しました。")
+			log.Fatalf("クエリの発行に失敗しました。%#v", err)
 		}
 		user.Education = a.SubjectAccesser.FindByID(subjectID)
 		userResult = append(userResult, user)
@@ -36,7 +36,7 @@ func (a *UserAccesser) FindBySubjectID(subjectID int) []model.User {
 func (a *UserAccesser) FindByID(ID int) *model.User {
 	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM user WHERE id = %d;", ID))
 	if err != nil {
-		log.Println("データの取得に失敗しました。")
+		log.Fatalf("データの取得に失敗しました。%#v", err)
 		return nil
 	}
 	defer rows.Close()
@@ -44,7 +44,7 @@ func (a *UserAccesser) FindByID(ID int) *model.User {
 	var subjectID int
 	for rows.Next() {
 		if err := rows.Scan(&user.ID, &user.Name, &subjectID); err != nil {
-			log.Println("クエリの発行に失敗しました。")
+			log.Fatalf("クエリの発行に失敗しました。%#v", err)
 		}
 		user.Education = a.SubjectAccesser.FindByID(subjectID)
 	}

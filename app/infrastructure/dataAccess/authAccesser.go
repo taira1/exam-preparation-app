@@ -15,14 +15,14 @@ type AuthAccesser struct {
 func (a *AuthAccesser) FindByEmail(email string) *model.Auth {
 	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM auth WHERE email = '%s';", email))
 	if err != nil {
-		log.Println("データの取得に失敗しました。")
+		log.Fatalf("データの取得に失敗しました。%#v", err)
 		return nil
 	}
 	defer rows.Close()
 	auth := model.Auth{}
 	for rows.Next() {
 		if err := rows.Scan(&auth.ID, &auth.Email, &auth.Password, &auth.UserID); err != nil {
-			log.Println("クエリの発行に失敗しました。")
+			log.Fatalf("クエリの発行に失敗しました。%#v", err)
 			return nil
 		}
 	}

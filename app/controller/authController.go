@@ -5,37 +5,63 @@ import (
 	"exam-preparation-app/app/service"
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/stretchr/gomniauth"
 	"github.com/stretchr/objx"
 )
 
-type authController struct {
+// AuthController 認証コントローラです
+type AuthController struct {
 	next controller
 }
 
-func (h *authController) process(w http.ResponseWriter, r *http.Request) map[string]interface{} {
-	_, err := r.Cookie("auth")
-	if err == http.ErrNoCookie {
-		w.Header().Set("Location", "/login")
-		w.WriteHeader(http.StatusTemporaryRedirect)
-		return nil
-	}
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return nil
+func (h *AuthController) process(w http.ResponseWriter, r *http.Request) map[string]interface{} {
+
+	segs := strings.Split(r.URL.Path, "/")
+	action := segs[1]
+	switch action {
+	case "user":
+		userCookie, err := r.Cookie("user")
+		if err == http.ErrNoCookie {
+			RedirectTo(w, "/login")
+			return nil
+		}
+		realUserID := objx.MustFromBase64(userCookie.Value)["userID"]
+		userID, _ := strconv.Atoi(segs[2])
+		if realUserID.(int) != userID {
+			log.Fatal("cookieの情報が壊れています")
+			RedirectTo(w, "/login")
+			return nil
+		}
+	case "article":
+		//TODO:ロジックを追加
+	case "chat":
+		userCookie, _ := r.Cookie("user")
+		authCookie, _ := r.Cookie("auth")
+		if userCookie == nil && authCookie == nil {
+			log.Fatal("ログインしていません")
+			RedirectTo(w, "/login")
+			return nil
+		}
+	case "admin":
+	//TODO:ロジックを追加
+	default:
+		//TODO:エラーページへリダイレクト
 	}
 	return h.next.process(w, r)
 }
 
-func (h *authController) specifyTemplate() *template.Template {
+func (h *AuthController) specifyTemplate() *template.Template {
 	return h.next.specifyTemplate()
 }
 
-func mustAuth(n controller) *authController {
-	return &authController{next: n}
+// MustAuth コンストラクタです
+func MustAuth(n controller) *AuthController {
+	return &AuthController{next: n}
 }
 
 // LoginHander ログインハンドラです
@@ -54,17 +80,9 @@ func LoginHander(w http.ResponseWriter, r *http.Request) {
 				return //TODO: エラーページへリダイレクトする
 			}
 			user := infrastructure.InfrastructureOBJ.UserAccesser.FindByID(userID)
-			authCookieValue := objx.New(map[string]interface{}{
-				"user": user,
-			}).MustBase64()
-			http.SetCookie(w, &http.Cookie{
-				Name:  "auth",
-				Value: authCookieValue,
-				Path:  "/"}) //TODO: Pathが"/"なのはセキュリティ上よくないので、厳密に指定する。
-
-			userPageURL := "/" //TODO:アカウントページにリダイレクト
-			w.Header().Set("Location", userPageURL)
-			w.WriteHeader(http.StatusTemporaryRedirect)
+			SetUserToCookie(w, "user", user)
+			userPageURL := fmt.Sprintf("/user/%d/profile", userID)
+			RedirectTo(w, userPageURL)
 
 		default:
 			provider, err := gomniauth.Provider(provider)
@@ -77,8 +95,7 @@ func LoginHander(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, fmt.Sprintf("GetBeginAuthURLの呼び出し中にエラーが発生しました。 %s: %s", provider, err), http.StatusInternalServerError)
 				return //TODO: エラーページへリダイレクトする
 			}
-			w.Header().Set("Location", loginURL)
-			w.WriteHeader(http.StatusTemporaryRedirect)
+			RedirectTo(w, loginURL)
 		}
 	case "callback":
 		provider, err := gomniauth.Provider(provider)
@@ -108,7 +125,6 @@ func LoginHander(w http.ResponseWriter, r *http.Request) {
 			Value: authCookieValue,
 			Path:  "/"}) //TODO: Pathが"/"なのはセキュリティ上よくないので、厳密に指定する。
 
-		w.Header().Set("Location", "/chat")
-		w.WriteHeader(http.StatusTemporaryRedirect)
+		RedirectTo(w, "/chat")
 	}
 }

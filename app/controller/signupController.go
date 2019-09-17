@@ -12,6 +12,7 @@ import (
 
 // SignupController サインアップコントローラです。
 type SignupController struct {
+	htmlFilename string
 }
 
 func (c *SignupController) process(w http.ResponseWriter, r *http.Request) map[string]interface{} {
@@ -23,11 +24,12 @@ func (c *SignupController) process(w http.ResponseWriter, r *http.Request) map[s
 		"Faculties":    faculties,
 		"Subjects":     subjects,
 	}
+	c.htmlFilename = "signup.html"
 	return data
 }
 
 func (c *SignupController) specifyTemplate() *template.Template {
-	return templateHelperOBJ.compiledTemplates["signup.html"]
+	return templateHelperOBJ.compiledTemplates[c.htmlFilename]
 }
 
 // SigunpHandler サインアップハンドラ

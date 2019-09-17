@@ -12,4 +12,5 @@ func RegisterTheHandler() {
 	http.HandleFunc("/signup/post", controller.SigunpHandler)
 	http.Handle("/signup/complete", controller.NewTemplateHandler(&controller.CompleteController{}))
 	http.Handle("/signup", controller.NewTemplateHandler(&controller.SignupController{}))
+	http.Handle("/user/", controller.NewTemplateHandler(controller.MustAuth(&controller.UserController{})))
 }

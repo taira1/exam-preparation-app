@@ -43,6 +43,11 @@ func (v *Validater) ValidateNameLength(name string) bool {
 	return v.validateStringLength(name, 1, 30)
 }
 
+// ValidateCommentLength ニックネームの文字数を検証します
+func (v *Validater) ValidateCommentLength(comment string) bool {
+	return v.validateStringLength(comment, 0, 200)
+}
+
 func (v *Validater) validateStringLength(str string, min int, max int) bool {
 	if min <= utf8.RuneCountInString(str) && utf8.RuneCountInString(str) <= max {
 		return true

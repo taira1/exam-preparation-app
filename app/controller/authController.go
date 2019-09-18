@@ -74,7 +74,7 @@ func LoginHander(w http.ResponseWriter, r *http.Request) {
 		switch provider {
 		case "default":
 			r.ParseForm()
-			userID := service.Authenticate(&r.Form["email"][0], &r.Form["password"][0])
+			userID := service.Authenticate(r.FormValue("email"), r.FormValue("password"))
 			if userID == -1 {
 				http.Error(w, fmt.Sprintf("認証を完了できませんでした。"), http.StatusInternalServerError)
 				return //TODO: エラーページへリダイレクトする

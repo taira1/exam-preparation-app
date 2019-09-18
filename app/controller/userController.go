@@ -3,6 +3,8 @@ package controller
 import (
 	"exam-preparation-app/app/domain/model"
 	"exam-preparation-app/app/infrastructure"
+	"exam-preparation-app/app/service"
+	"fmt"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -29,17 +31,29 @@ func (c *UserController) process(w http.ResponseWriter, r *http.Request) map[str
 	case "profile":
 		switch method {
 		case "":
-			c.htmlFilename = "userHome.html"
+			c.htmlFilename = "user_home.html"
 			return map[string]interface{}{
 				"User": infrastructure.InfrastructureOBJ.UserAccesser.FindByID(userID),
 			}
 		case "edit":
-			c.htmlFilename = "userHome.html" //TODO:適切なHTMLテンプレートに変更する。
+			c.htmlFilename = "user_edit.html" //TODO:適切なHTMLテンプレートに変更する。
 			return map[string]interface{}{
 				"User": infrastructure.InfrastructureOBJ.UserAccesser.FindByID(userID),
 			}
 		case "post":
-			//TODO:ロジックを追加 serviceに投げるのも手
+			us := service.NewUserService()
+			if us.ValidateUpdateUser(r.FormValue("userName"), r.FormValue("comment")) == false {
+				http.Error(w, "更新に失敗しました。入力文字数が最大値を超えている可能性があります。", http.StatusInternalServerError)
+				RedirectTo(w, fmt.Sprintf("/user/%d/profile", userID))
+				return nil
+			}
+			user := infrastructure.InfrastructureOBJ.UserAccesser.FindByID(userID)
+			user.Name = r.FormValue("userName")
+			user.Comment = r.FormValue("comment")
+			if us.UpdateUser(user) == false {
+				http.Error(w, "データベースに登録できませんでした。", http.StatusInternalServerError)
+			}
+			RedirectTo(w, fmt.Sprintf("/user/%d/profile", userID))
 		}
 	case "articles":
 	}

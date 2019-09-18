@@ -43,7 +43,7 @@ func (a *UserAccesser) FindByID(ID int) *model.User {
 	user := model.User{}
 	var subjectID int
 	for rows.Next() {
-		if err := rows.Scan(&user.ID, &user.Name, &subjectID); err != nil {
+		if err := rows.Scan(&user.ID, &user.Name, &user.Comment, &subjectID); err != nil {
 			log.Fatalf("クエリの発行に失敗しました。%#v", err)
 		}
 		user.Education = a.SubjectAccesser.FindByID(subjectID)
@@ -53,15 +53,25 @@ func (a *UserAccesser) FindByID(ID int) *model.User {
 
 // Insert 引数で渡したuserをDBに登録,自動採番されたIDを返す。
 func (a *UserAccesser) Insert(u *model.User) int {
-	ins, err := a.DBAgent.Conn.Prepare("INSERT INTO user(name,education_id) VALUES(?,?)")
+	ins, err := a.DBAgent.Conn.Prepare("INSERT INTO user(name,comment,education_id) VALUES(?,?,?)")
 	if err != nil {
 		log.Fatal(err)
 		err = nil
 		return -1
 	}
-	if _, e := ins.Exec(u.Name, u.Education.ID); e != nil {
+	if _, e := ins.Exec(u.Name, u.Comment, u.Education.ID); e != nil {
 		log.Fatal(e)
 		return -1
 	}
 	return GetAutoNumberedID(a.DBAgent)
+}
+
+// Update 引数で渡したuserをDBに登録。成功したらtrue失敗したらfalseを返す
+func (a *UserAccesser) Update(u *model.User) bool {
+	_, err := a.DBAgent.Conn.Exec("UPDATE user SET name = ?, comment = ? WHERE id = ?;", u.Name, u.Comment, u.ID)
+	if err != nil {
+		log.Fatal(err)
+		return false
+	}
+	return true
 }

@@ -14,9 +14,9 @@ type AuthService struct {
 }
 
 // Authenticate 指定したemailアドレスが認証できた場合そのユーザのidを返します。認証に失敗した場合-1を返します。
-func Authenticate(email *string, pass *string) int {
-	authObj := infrastructure.InfrastructureOBJ.AuthAccesser.FindByEmail(*email)
-	if crypto.CompareHashAndPassword(authObj.Password, *pass) {
+func Authenticate(email string, pass string) int {
+	authObj := infrastructure.InfrastructureOBJ.AuthAccesser.FindByEmail(email)
+	if crypto.CompareHashAndPassword(authObj.Password, pass) {
 		return authObj.UserID
 	}
 	return -1

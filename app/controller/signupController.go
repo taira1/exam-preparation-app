@@ -68,13 +68,12 @@ func SigunpHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	user := &model.User{
 		Name:      userName,
+		Comment:   "",
 		Education: infrastructure.InfrastructureOBJ.SubjectAccesser.FindByID(subjectID),
 	}
 
 	service.RegisterAuthUser(auth, user)
 
 	nextURL := fmt.Sprintf("/signup/complete")
-	w.Header().Set("Location", nextURL)
-	w.WriteHeader(http.StatusTemporaryRedirect)
-
+	RedirectTo(w, nextURL)
 }

@@ -65,3 +65,13 @@ func (a *ArticleAccesser) FindByID(ID int) *model.Article {
 	}
 	return &article
 }
+
+// Update 引数で渡したarticleをDBに登録。成功したらtrue失敗したらfalseを返す
+func (a *ArticleAccesser) Update(ar *model.Article) bool {
+	_, err := a.DBAgent.Conn.Exec("UPDATE article SET title = ?, class = ?, teacher = ?, content = ?, status = ? WHERE id = ?;", ar.Title, ar.Class, ar.Teacher, ar.Content, ar.Status, ar.ID)
+	if err != nil {
+		log.Fatal(err)
+		return false
+	}
+	return true
+}

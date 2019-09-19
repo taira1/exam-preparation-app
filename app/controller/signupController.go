@@ -71,9 +71,6 @@ func SigunpHandler(w http.ResponseWriter, r *http.Request) {
 		Comment:   "",
 		Education: infrastructure.InfrastructureOBJ.SubjectAccesser.FindByID(subjectID),
 	}
-
 	service.RegisterAuthUser(auth, user)
-
-	nextURL := fmt.Sprintf("/signup/complete")
-	RedirectTo(w, nextURL)
+	http.Redirect(w, r, fmt.Sprintf("/signup/complete"), http.StatusTemporaryRedirect)
 }

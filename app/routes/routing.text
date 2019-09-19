@@ -5,9 +5,10 @@ user/id/profile/post----------プロフィール編集のpost
 user/id/article---------------my記事一覧
 user/id/article/new-----------新規記事作成ページ
 user/id/article/new/post------新規記事作成post
+user/id/article/new/complete--新規記事登録完了
 user/id/article/id/edit-------my記事編集
 user/id/article/id/post-------my記事編集のpost
-
+user/id/article/id/complete---my記事編集完了
 article/id--------------------記事詳細
 
 chat--------------------------自分の学科で開かれているチャットルーム一覧を表示

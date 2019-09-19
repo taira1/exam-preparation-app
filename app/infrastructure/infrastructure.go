@@ -14,6 +14,7 @@ type Infrastructure struct {
 	FacultyAccesser    *dataAccess.FacultyAccesser
 	SubjectAccesser    *dataAccess.SubjectAccesser
 	UserAccesser       *dataAccess.UserAccesser
+	ArticleAccesser    *dataAccess.ArticleAccesser
 	AuthAccesser       *dataAccess.AuthAccesser
 	DBAgent            *dataAccess.DBAgent
 }
@@ -30,6 +31,9 @@ func newSubjectAccesser(dbAgent *dataAccess.DBAgent, accesser *dataAccess.Facult
 func newUserAccesser(dbAgent *dataAccess.DBAgent, accesser *dataAccess.SubjectAccesser) *dataAccess.UserAccesser {
 	return &dataAccess.UserAccesser{DBAgent: dbAgent, SubjectAccesser: accesser}
 }
+func newArticleAccesser(dbAgent *dataAccess.DBAgent) *dataAccess.ArticleAccesser {
+	return &dataAccess.ArticleAccesser{DBAgent: dbAgent}
+}
 func newAuthAccesser(dbAgent *dataAccess.DBAgent) *dataAccess.AuthAccesser {
 	return &dataAccess.AuthAccesser{DBAgent: dbAgent}
 }
@@ -41,6 +45,7 @@ func newInfrastructure() *Infrastructure {
 	facultyAccesser := newFacultyAccesser(dbAgent, universityAccesser)
 	subjectAccesser := newSubjectAccesser(dbAgent, facultyAccesser)
 	userAccesser := newUserAccesser(dbAgent, subjectAccesser)
+	articleAccesser := newArticleAccesser(dbAgent)
 	authAccesser := newAuthAccesser(dbAgent)
 
 	return &Infrastructure{
@@ -49,6 +54,7 @@ func newInfrastructure() *Infrastructure {
 		FacultyAccesser:    facultyAccesser,
 		SubjectAccesser:    subjectAccesser,
 		UserAccesser:       userAccesser,
+		ArticleAccesser:    articleAccesser,
 		AuthAccesser:       authAccesser,
 	}
 }

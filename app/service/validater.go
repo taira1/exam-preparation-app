@@ -62,3 +62,13 @@ func (v *Validater) ValidateExistenceOfSubject(subjectID int) bool {
 	}
 	return false
 }
+
+// ValidateMatchesFixedValues strがvaluesのいずれかの文字列と一致した場合にtrueを返します。
+func (v *Validater) ValidateMatchesFixedValues(str string, values []string) bool {
+	for i := 0; i < len(values); i++ {
+		if str == values[i] {
+			return true
+		}
+	}
+	return false
+}

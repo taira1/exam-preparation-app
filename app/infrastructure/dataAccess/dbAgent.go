@@ -26,5 +26,5 @@ func NewDbAgent() *DBAgent {
 
 func getDBConnection() (*sql.DB, error) {
 	return sql.Open("mysql", "root:@/exam_preparation")
-	//TODO:データベースのハードコードをどうにかする。
+	//TODO:データベースURLのハードコードをどうにかする。
 }

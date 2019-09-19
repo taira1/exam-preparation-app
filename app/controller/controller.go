@@ -12,7 +12,7 @@ type controller interface {
 }
 
 // RedirectTo 指定したURLへリダイレクトします。
-func RedirectTo(w http.ResponseWriter, URL string) {
-	w.Header().Set("Location", URL)
-	w.WriteHeader(http.StatusTemporaryRedirect)
-}
+// func RedirectTo(w http.ResponseWriter, URL string) {
+// 	w.Header().Set("Location", URL)
+// 	w.WriteHeader(http.StatusTemporaryRedirect)
+// }

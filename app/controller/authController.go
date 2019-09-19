@@ -27,14 +27,14 @@ func (h *AuthController) process(w http.ResponseWriter, r *http.Request) map[str
 	case "user":
 		userCookie, err := r.Cookie("user")
 		if err == http.ErrNoCookie {
-			RedirectTo(w, "/login")
+			http.Redirect(w, r, fmt.Sprintf("/login"), http.StatusTemporaryRedirect)
 			return nil
 		}
 		realUserID := objx.MustFromBase64(userCookie.Value)["userID"]
 		userID, _ := strconv.Atoi(segs[2])
 		if realUserID.(int) != userID {
 			log.Fatal("cookieの情報が壊れています")
-			RedirectTo(w, "/login")
+			http.Redirect(w, r, fmt.Sprintf("/login"), http.StatusTemporaryRedirect)
 			return nil
 		}
 	case "article":
@@ -44,7 +44,7 @@ func (h *AuthController) process(w http.ResponseWriter, r *http.Request) map[str
 		authCookie, _ := r.Cookie("auth")
 		if userCookie == nil && authCookie == nil {
 			log.Fatal("ログインしていません")
-			RedirectTo(w, "/login")
+			http.Redirect(w, r, fmt.Sprintf("/login"), http.StatusTemporaryRedirect)
 			return nil
 		}
 	case "admin":
@@ -81,9 +81,7 @@ func LoginHander(w http.ResponseWriter, r *http.Request) {
 			}
 			user := infrastructure.InfrastructureOBJ.UserAccesser.FindByID(userID)
 			SetUserToCookie(w, "user", user)
-			userPageURL := fmt.Sprintf("/user/%d/profile", userID)
-			RedirectTo(w, userPageURL)
-
+			http.Redirect(w, r, fmt.Sprintf("/user/%d/profile", userID), http.StatusTemporaryRedirect)
 		default:
 			provider, err := gomniauth.Provider(provider)
 			if err != nil {
@@ -95,7 +93,7 @@ func LoginHander(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, fmt.Sprintf("GetBeginAuthURLの呼び出し中にエラーが発生しました。 %s: %s", provider, err), http.StatusInternalServerError)
 				return //TODO: エラーページへリダイレクトする
 			}
-			RedirectTo(w, loginURL)
+			http.Redirect(w, r, loginURL, http.StatusTemporaryRedirect)
 		}
 	case "callback":
 		provider, err := gomniauth.Provider(provider)
@@ -124,7 +122,6 @@ func LoginHander(w http.ResponseWriter, r *http.Request) {
 			Name:  "auth",
 			Value: authCookieValue,
 			Path:  "/"}) //TODO: Pathが"/"なのはセキュリティ上よくないので、厳密に指定する。
-
-		RedirectTo(w, "/chat")
+		http.Redirect(w, r, "/chat", http.StatusTemporaryRedirect)
 	}
 }

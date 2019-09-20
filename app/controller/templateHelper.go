@@ -18,6 +18,9 @@ func newTemplateHelper() *templateHelper {
 	t.setCompileTemplate("signup.html")
 	t.setCompileTemplate("user_home.html")
 	t.setCompileTemplate("user_edit.html")
+	t.setCompileTemplate("article_complete.html")
+	t.setCompileTemplate("article_edit.html")
+	t.setCompileTemplate("article_list.html")
 	t.setCompileTemplate("complete.html")
 	t.setCompileTemplate("error.html")
 	return t

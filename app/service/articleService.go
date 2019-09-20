@@ -1,8 +1,11 @@
 package service
 
 import (
+	"database/sql"
 	"exam-preparation-app/app/domain/model"
 	"exam-preparation-app/app/infrastructure"
+	"exam-preparation-app/app/infrastructure/dataAccess"
+	"log"
 )
 
 // ArticleService 記事サービスです
@@ -10,10 +13,12 @@ type ArticleService struct {
 	validater *Validater
 }
 
+// ArticleStatusCodes 許容される記事のステータスコードです
+var ArticleStatusCodes = []string{"public", "pending"}
+
 // ValidateStatus Statusコードの妥当性を検証します。
 func (s *ArticleService) ValidateStatus(str string) bool {
-	values := []string{"public", "pending"}
-	return s.validater.ValidateMatchesFixedValues(str, values)
+	return s.validater.ValidateMatchesFixedValues(str, ArticleStatusCodes)
 }
 
 // Update 引数で指定した記事を更新します。
@@ -24,4 +29,14 @@ func (s *ArticleService) Update(article *model.Article) bool {
 // NewArticleService コンストラクタです
 func NewArticleService() *ArticleService {
 	return &ArticleService{validater: NewValidater()}
+}
+
+// RegisterArticle 引数で指定したarticleをDBに保存します。
+func (s *ArticleService) RegisterArticle(article *model.Article) {
+	if err := dataAccess.Transact(infrastructure.InfrastructureOBJ.DBAgent.Conn, func(tx *sql.Tx) error {
+		return infrastructure.InfrastructureOBJ.ArticleAccesser.Insert(article)
+	}); err != nil {
+		log.Fatalf("error:%#v", err)
+	}
+
 }

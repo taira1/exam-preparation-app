@@ -80,7 +80,7 @@ func LoginHander(w http.ResponseWriter, r *http.Request) {
 				return //TODO: エラーページへリダイレクトする
 			}
 			user := infrastructure.InfrastructureOBJ.UserAccesser.FindByID(userID)
-			SetUserToCookie(w, "user", user)
+			setUserToCookie(w, "user", user)
 			http.Redirect(w, r, fmt.Sprintf("/user/%d/profile", userID), http.StatusTemporaryRedirect)
 		default:
 			provider, err := gomniauth.Provider(provider)

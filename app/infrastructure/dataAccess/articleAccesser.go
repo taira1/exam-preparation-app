@@ -75,3 +75,17 @@ func (a *ArticleAccesser) Update(ar *model.Article) bool {
 	}
 	return true
 }
+
+// Insert 引数で受け取ったauth,Userをインサートします。
+func (a *ArticleAccesser) Insert(ar *model.Article) error {
+	ins, err := a.DBAgent.Conn.Prepare("INSERT INTO article(user_id, title, class, teacher, content, status) VALUES(?,?,?,?,?,?)")
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	if _, e := ins.Exec(ar.UserID, ar.Title, ar.Class, ar.Teacher, ar.Content, ar.Status); e != nil {
+		log.Fatal(err)
+		return e
+	}
+	return nil
+}

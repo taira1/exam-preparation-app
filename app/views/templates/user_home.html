@@ -1,22 +1,37 @@
 <html>
   <head>
-    <title>アカウントトップ</title>
+    <title>マイページ</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   </head>
   <body>
     <div class="container">
       <div class="page-header">
-        <h1>アカウントトップ</h1>
+        {{template "user_header" .}}{{include "../views/templates/user_header.html"}}
       </div>
-      <div class="panel panel-danger">
+      <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title">ようこそ</h3>
+            <h3 class="panel-title">所属大学</h3>
+        </div>
+          <div class="panel-body">
+            <p>{{.User.Education.Faculty.University.Name}}・{{.User.Education.Faculty.Name}}・{{.User.Education.Name}}</p>  
+          </div>
+
+        <div class="panel-heading">
+          <h3 class="panel-title">マイプロフィール</h3>
         </div>
         <div class="panel-body">
-            ニックネーム: {{.User.Name}}
-            自己紹介:
-            <p>{{.User.Comment}}</p> 
+            <ul class="list-group">
+                <li class="list-group-item"><p>ニックネーム: </p><p>{{.User.Name}}</p></li>
+                <li class="list-group-item"><p>自己紹介: </p><p>{{.User.Comment}}</p></li>
+            </ul>
+            <form action="/user/{{.User.ID}}/profile/edit" method="post" class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="submit" class="btn btn-default btn-block">編集</button>
+                    </div>
+                </div>
+            </form>   
         </div>
       </div>
     </div>

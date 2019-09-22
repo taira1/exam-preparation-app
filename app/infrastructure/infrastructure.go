@@ -63,6 +63,6 @@ func newInfrastructure() *Infrastructure {
 func (i *Infrastructure) Close() {
 	err := i.DBAgent.Conn.Close()
 	if err != nil {
-		log.Println("DBコネクションを正常に終了できませんでした。")
+		log.Fatalf("DBコネクションを正常に終了できませんでした。:%#v", err)
 	}
 }

@@ -6,8 +6,17 @@
   </head>
   <body>
     <div class="container">
-      <div class="page-header">
-        <h1>記事一覧を表示します。</h1>
+        <div class="page-header">
+            {{template "user_header" .}}{{include "../views/templates/user_header.html"}}
+        </div>
+        <div class="page-body">
+            {{if .Err}}
+            <div class="alert alert-danger" role="alert">
+                <li><strong>エラー</strong>-{{.Err}}</li>
+            </div>
+            {{end}}
+            <h1>記事一覧を表示します。</h1>
+        </div>
     </div>
   </body>
 </html>

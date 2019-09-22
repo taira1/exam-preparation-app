@@ -69,16 +69,15 @@
   <body>
     <div class="container">
       <div class="page-header">
-        <h1>新規アカウント作成</h1>
+          {{template "header" .}}{{include "../views/templates/header.html"}}
       </div>
-      <div class="panel panel-danger">
+      <h1>新規アカウント作成</h1>
+      <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">全ての機能を使うためにアカウントを作成してください</h3>
         </div>
         <div class="panel-body">
-            
             <form action="/signup/post" method="post" class="form-horizontal" data-toggle="validator">
-                
                 <div class="form-group">
                     <label for="input_name" class="col-md-2 control-label">大学：</label>
                     <div class="col-md-10">
@@ -138,7 +137,7 @@
             </form>      
 
 
-          <p>チャット機能のみを利用する場合は</p>
+          <!-- <p>チャット機能のみを利用する場合は</p>
           <ul>
             <li>
               <a href="/auth/login/facebook">Facebook</a>
@@ -146,7 +145,7 @@
             <li>
               <a href="/auth/login/google">Google</a>
             </li>
-          </ul>
+          </ul> -->
         </div>
       </div>
     </div>

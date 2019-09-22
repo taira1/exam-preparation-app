@@ -14,7 +14,7 @@ type ArticleAccesser struct {
 
 // FindByUserID 指定したuserIDのArticleを全て取得します。
 func (a *ArticleAccesser) FindByUserID(userID int) []model.Article {
-	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM auth WHERE email = '%d';", userID))
+	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM article WHERE user_id = %d;", userID))
 	if err != nil {
 		log.Fatalf("データの取得に失敗しました。%#v", err)
 		return nil
@@ -42,7 +42,7 @@ func (a *ArticleAccesser) FindByUserID(userID int) []model.Article {
 
 // FindByID 指定したIDのArticleを取得します。
 func (a *ArticleAccesser) FindByID(ID int) *model.Article {
-	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM auth WHERE email = '%d';", ID))
+	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM article WHERE id = %d;", ID))
 	if err != nil {
 		log.Fatalf("データの取得に失敗しました。%#v", err)
 		return nil
@@ -83,9 +83,23 @@ func (a *ArticleAccesser) Insert(ar *model.Article) error {
 		log.Fatal(err)
 		return err
 	}
-	if _, e := ins.Exec(ar.UserID, ar.Title, ar.Class, ar.Teacher, ar.Content, ar.Status); e != nil {
+	if _, err := ins.Exec(ar.UserID, ar.Title, ar.Class, ar.Teacher, ar.Content, ar.Status); err != nil {
 		log.Fatal(err)
-		return e
+		return err
 	}
 	return nil
+}
+
+// DeleteByID 指定したIDの記事を削除します。
+func (a *ArticleAccesser) DeleteByID(id int) bool {
+	del, err := a.DBAgent.Conn.Prepare("DELETE FROM article WHERE id = ?")
+	if err != nil {
+		log.Fatal(err)
+		return false
+	}
+	if _, err := del.Exec(id); err != nil {
+		log.Fatal(err)
+		return false
+	}
+	return true
 }

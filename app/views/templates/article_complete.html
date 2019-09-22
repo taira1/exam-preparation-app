@@ -1,13 +1,17 @@
 <html>
   <head>
-    <title>記事を保存しました</title>
+    <title>{{.Title}}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   </head>
   <body>
     <div class="container">
       <div class="page-header">
-        <h1>記事を保存しました。</h1>
+          {{template "user_header" .}}{{include "../views/templates/user_header.html"}}
+      </div>
+      <div class="page-body">
+        <h1>{{.Message}}</h1>
+      </div>
     </div>
   </body>
 </html>

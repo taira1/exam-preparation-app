@@ -6,8 +6,24 @@
   </head>
   <body>
     <div class="container">
-      <div class="page-header">
-        <h1>アカウントを作成しました。</h1>
+        <div class="page-header">
+            <h1>アカウントを作成しました。</h1>
+        <div>
+        <div class="page-body">
+          {{if .Err}}
+          <div class="alert alert-danger" role="alert">
+              <li><strong>エラー</strong>-{{.Err}}</li>
+          </div>
+          {{end}}
+
+          <form action="/login" method="get" class="form-horizontal">
+              <div class="form-group">
+                  <div class="col-md-offset-2 col-md-10">
+                      <button type="submit" class="btn btn-primary btn-block">ログインする</button>
+                  </div>
+              </div>
+          </form>
+        </div>
     </div>
   </body>
 </html>

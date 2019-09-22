@@ -8,13 +8,19 @@
   <body>
     <div class="container">
       <div class="page-header">
-        <h1>ログイン</h1>
+          {{template "header" .}}{{include "../views/templates/header.html"}}
       </div>
-      <div class="panel panel-danger">
+      <h1>ログイン</h1>
+      <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">全ての機能を使うためにログインしてください</h3>
         </div>
         <div class="panel-body">
+            {{range .Err}}
+            <div class="alert alert-danger" role="alert">
+              <strong>エラー</strong>-{{.}}
+            </div>
+            {{end}}
             
             <form action="/auth/login/default" method="post" class="form-horizontal">
                 <div class="form-group">
@@ -39,7 +45,7 @@
             </form>      
 
 
-          <p>または</p>
+          <!-- <p>または</p>
           <ul>
             <li>
               <a href="/auth/login/facebook">Facebook</a>
@@ -47,7 +53,7 @@
             <li>
               <a href="/auth/login/google">Google</a>
             </li>
-          </ul>
+          </ul> -->
         </div>
       </div>
     </div>

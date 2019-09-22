@@ -1,0 +1,24 @@
+<html>
+  <head>
+    <title>{{.Confirme.Title}}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header">
+            {{template "header" .}}{{include "../views/templates/header.html"}}
+      </div>
+      <div class="panel panel-danger">
+        <div class="panel-heading">
+          <h3 class="panel-title">エラー</h3>
+        </div>
+        <div class="panel-body">
+            {{if .Err}}
+            <li><strong>エラー</strong>-{{.Err}}</li>
+            {{end}}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

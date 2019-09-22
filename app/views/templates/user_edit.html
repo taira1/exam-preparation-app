@@ -7,17 +7,19 @@
   <body>
     <div class="container">
       <div class="page-header">
-        <h1>プロフィール編集</h1>
+        {{template "user_header" .}}{{include "../views/templates/user_header.html"}}
       </div>
-      <div class="alert alert-danger" role="alert">
-          {{range .Err}}<strong>エラー</strong>-{{.}}{{end}}
-      </div>
-      <div class="panel panel-danger">
+      <h1>プロフィール編集</h1>
+      <div class="panel panel-default">
         <div class="panel-heading">
           <h3 class="panel-title">編集</h3>
         </div>
         <div class="panel-body">
-            
+            {{if .Err}}
+            <div class="alert alert-danger" role="alert">
+                <li><strong>エラー</strong>-{{.Err}}</li>
+            </div>
+            {{end}}
             <form action="/user/{{.User.ID}}/profile/post" method="post" class="form-horizontal">
                 <div class="form-group">
                     <label for="input_name" class="col-md-2 control-label">ニックネーム：</label>
@@ -29,7 +31,7 @@
                 <div class="form-group">
                     <label for="input_password" class="col-md-2 control-label">自己紹介：</label>
                     <div class="col-md-10">
-                        <textarea placeholder="自己紹介" rows="3" class="form-control" id="edit_comment" name="comment">{{.User.Comment}}</textarea>
+                        <textarea placeholder="自己紹介" rows="5" class="form-control" id="edit_comment" name="comment">{{.User.Comment}}</textarea>
                     </div>
                 </div>
                         

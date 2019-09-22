@@ -7,19 +7,18 @@
   <body>
     <div class="container">
       <div class="page-header">
-        <h1>記事</h1>
+        {{template "user_header" .}}{{include "../views/templates/user_header.html"}}
       </div>
-      <div class="panel panel-danger">
-        {{if .Err}}
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">{{.Next.Status}}</h3>
+        </div>
+        <div class="panel-body">
+            {{if .Err}}
             <div class="alert alert-danger" role="alert">
                 <li><strong>エラー</strong>-{{.Err}}</li>
             </div>
-        {{end}}
-        <div class="panel-heading">
-          <h3 class="panel-title">作成</h3>
-        </div>
-        <div class="panel-body">
-            
+            {{end}}
             <form action="{{.Next.URL}}" method="post" class="form-horizontal">
                 <div class="form-group">
                     <label for="input_name" class="col-md-2 control-label">講義名：</label>
@@ -67,7 +66,17 @@
                         <button type="submit" class="btn btn-primary btn-block">保存</button>
                     </div>
                 </div>
-            </form>      
+            </form>
+            
+            {{if .DeleteURL}}
+                <form action="{{.DeleteURL}}" method="get" class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <button type="submit" class="btn btn-danger btn-block">記事を削除</button>
+                        </div>
+                    </div>
+                </form>
+            {{end}}
         </div>
       </div>
     </div>

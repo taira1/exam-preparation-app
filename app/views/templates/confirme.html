@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <title>{{.Confirme.Title}}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+        <div class="page-header">
+            {{template "user_header" .}}{{include "../views/templates/user_header.html"}}
+        </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">{{.Confirme.Message}}</h3>
+        </div>
+        <div class="panel-body">
+            {{if .Err}}
+            <div class="alert alert-danger" role="alert">
+                <li><strong>エラー</strong>-{{.Err}}</li>
+            </div>
+            {{end}}
+            <div class="form-group">
+                <label for="input_name" class="col-md-2 control-label">タイトル：</label>
+                <div class="col-md-10">
+                    <p>{{.Article.Title}}</p>
+                 </div>     
+            </div>
+            <form action="{{.Confirme.NextURL}}" method="delete" class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button type="submit" class="btn btn-danger btn-block">{{.Confirme.ButtonMessage}}</button>
+                    </div>
+                </div>
+            </form>      
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

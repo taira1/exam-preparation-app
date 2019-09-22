@@ -26,6 +26,11 @@ func (s *ArticleService) Update(article *model.Article) bool {
 	return infrastructure.InfrastructureOBJ.ArticleAccesser.Update(article)
 }
 
+// DeleteByID idで指定した記事を削除します。
+func (s *ArticleService) DeleteByID(id int) bool {
+	return infrastructure.InfrastructureOBJ.ArticleAccesser.DeleteByID(id)
+}
+
 // NewArticleService コンストラクタです
 func NewArticleService() *ArticleService {
 	return &ArticleService{validater: NewValidater()}

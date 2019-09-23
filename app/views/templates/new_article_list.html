@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <title>新着記事一覧</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script> 
+        $(function(){
+            $('.align-items-start').mouseover(addClass('active'));
+        });   
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header">
+        {{template "header" .}}{{include "../views/templates/header.html"}}
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">新着記事一覧</h3>
+        </div>
+          <div class="panel-body">
+            {{range .Articles}}
+                {{template "base_public_article_list" .}}{{include "../views/templates/base_article_list.html"}}
+            {{end}}
+          </div>
+      </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.1.min.js"></script>
+  </body>
+</html>

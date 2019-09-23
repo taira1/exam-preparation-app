@@ -16,7 +16,7 @@ type SubjectAccesser struct {
 func (a *SubjectAccesser) FindAll() []model.Subject {
 	rows, err := a.DBAgent.Conn.Query("SELECT * FROM subject")
 	if err != nil {
-		log.Fatalf("データの取得に失敗しました。%#v", err)
+		log.Printf(failedToGetData.value, err)
 		return nil
 	}
 	defer rows.Close()
@@ -25,7 +25,7 @@ func (a *SubjectAccesser) FindAll() []model.Subject {
 	for rows.Next() {
 		subject := model.Subject{}
 		if err := rows.Scan(&subject.ID, &subject.Name, &facultyID); err != nil {
-			log.Fatalf("クエリの発行に失敗しました。%#v", err)
+			log.Printf(failedToGetData.value, err)
 		}
 		subject.Faculty = a.FacultyAccesser.FindByID(facultyID)
 		subjectResult = append(subjectResult, subject)
@@ -37,7 +37,7 @@ func (a *SubjectAccesser) FindAll() []model.Subject {
 func (a *SubjectAccesser) FindByFacultyID(facultyID int) []model.Subject {
 	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM subject WHERE faculty_id = %d", facultyID))
 	if err != nil {
-		log.Fatalf("データの取得に失敗しました。%#v", err)
+		log.Printf(failedToGetData.value, err)
 		return nil
 	}
 	defer rows.Close()
@@ -46,7 +46,7 @@ func (a *SubjectAccesser) FindByFacultyID(facultyID int) []model.Subject {
 	for rows.Next() {
 		subject := model.Subject{}
 		if err := rows.Scan(&subject.ID, &subject.Name, &trash); err != nil {
-			log.Fatalf("クエリの発行に失敗しました。%#v", err)
+			log.Printf(failedToGetData.value, err)
 		}
 		subject.Faculty = a.FacultyAccesser.FindByID(facultyID)
 		subjectResult = append(subjectResult, subject)
@@ -58,7 +58,7 @@ func (a *SubjectAccesser) FindByFacultyID(facultyID int) []model.Subject {
 func (a *SubjectAccesser) FindByID(ID int) *model.Subject {
 	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM subject WHERE id = %d", ID))
 	if err != nil {
-		log.Fatalf("データの取得に失敗しました。%#v", err)
+		log.Printf(failedToGetData.value, err)
 		return nil
 	}
 	defer rows.Close()
@@ -67,7 +67,7 @@ func (a *SubjectAccesser) FindByID(ID int) *model.Subject {
 
 	for rows.Next() {
 		if err := rows.Scan(&subject.ID, &subject.Name, &facultyID); err != nil {
-			log.Fatalf("クエリの発行に失敗しました。%#v", err)
+			log.Printf(failedToGetData.value, err)
 		}
 		subject.Faculty = a.FacultyAccesser.FindByID(facultyID)
 	}

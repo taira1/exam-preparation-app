@@ -51,7 +51,7 @@ func (c *UserController) process(w http.ResponseWriter, r *http.Request) map[str
 		case "post":
 			us := service.NewUserService()
 			if us.ValidateUpdateUser(r.FormValue("userName"), r.FormValue("comment")) == false {
-				setErrMessageToCookie(w, r, "更新に失敗しました。入力文字数が最大値を超えている可能性があります。")
+				setErrMessageToCookie(w, r, "ニックネームは1文字以上30文字以内,自己紹介は200文字以内にしてください")
 				http.Redirect(w, r, fmt.Sprintf("/user/%d/profile/edit", userID), http.StatusTemporaryRedirect)
 				return nil
 			}
@@ -93,13 +93,13 @@ func (c *UserController) process(w http.ResponseWriter, r *http.Request) map[str
 				if as.ValidateStatus(r.FormValue("status")) == false {
 					setArticleToCookie(w, r, article)
 					setErrMessageToCookie(w, r, "無効な記事ステータスです")
-					http.Redirect(w, r, fmt.Sprintf("/user/%d/article/new", userID), 301)
+					http.Redirect(w, r, fmt.Sprintf("/user/%d/article/new", userID), http.StatusTemporaryRedirect)
 					return nil
 				}
 				as.RegisterArticle(article)
 				deleteCookieByName(w, r, "article")
 				deleteCookieByName(w, r, "err")
-				http.Redirect(w, r, fmt.Sprintf("/user/%d/article/new/complete", userID), 301)
+				http.Redirect(w, r, fmt.Sprintf("/user/%d/article/new/complete", userID), http.StatusTemporaryRedirect)
 			case "complete": //記事新規作成コンプリート
 				c.htmlFilename = "article_complete.html"
 				return map[string]interface{}{
@@ -108,7 +108,13 @@ func (c *UserController) process(w http.ResponseWriter, r *http.Request) map[str
 					"User":    infrastructure.InfrastructureOBJ.UserAccesser.FindByID(userID),
 				}
 			}
-
+		case "other":
+			c.htmlFilename = "subject_article_list.html"
+			userSubjectID := infrastructure.InfrastructureOBJ.UserAccesser.FindByID(userID).Education.ID
+			return map[string]interface{}{
+				"Articles": infrastructure.InfrastructureOBJ.ArticleAccesser.FindBySubjectIDAndStatusIsPublic(userSubjectID),
+				"User":     infrastructure.InfrastructureOBJ.UserAccesser.FindByID(userID),
+			}
 		default: //記事の編集
 			articleID, _ := strconv.Atoi(segs[4])
 			switch method2 {
@@ -133,7 +139,7 @@ func (c *UserController) process(w http.ResponseWriter, r *http.Request) map[str
 				as := service.ArticleService{}
 				if as.ValidateStatus(r.FormValue("status")) == false {
 					setErrMessageToCookie(w, r, "無効な記事ステータスです")
-					http.Redirect(w, r, fmt.Sprintf("/user/%d/article/%d/edit", userID, articleID), 301)
+					http.Redirect(w, r, fmt.Sprintf("/user/%d/article/%d/edit", userID, articleID), http.StatusTemporaryRedirect)
 					return nil
 				}
 				article := getArticleFromForm(r)
@@ -170,6 +176,14 @@ func (c *UserController) process(w http.ResponseWriter, r *http.Request) map[str
 					"Message": "記事を保存しました。",
 					"User":    infrastructure.InfrastructureOBJ.UserAccesser.FindByID(userID),
 				}
+			case "other":
+				c.htmlFilename = "subject_article.html"
+				article := infrastructure.InfrastructureOBJ.ArticleAccesser.FindByID(articleID)
+				return map[string]interface{}{
+					"User":    infrastructure.InfrastructureOBJ.UserAccesser.FindByID(userID),
+					"Article": article,
+					"Poster":  infrastructure.InfrastructureOBJ.UserAccesser.FindByID(article.UserID),
+				}
 			}
 		}
 	}
@@ -185,7 +199,7 @@ func setUserToCookie(w http.ResponseWriter, value *model.User) {
 	http.SetCookie(w, &http.Cookie{
 		Name:  "user",
 		Value: userCookieValue,
-		Path:  "/"}) //TODO: Pathが"/"なのはセキュリティ上よくないので、厳密に指定する。
+		Path:  "/"})
 }
 
 // setArticleToCookie 記事情報をCookieにセットします
@@ -222,9 +236,8 @@ func getArticleFromCookie(r *http.Request) *model.Article {
 		if s, ok := objx.MustFromBase64(cookieValue.Value)["Status"].(string); ok {
 			article.Status = s
 		}
-		return article
 	}
-	return nil
+	return article
 }
 
 //getArticleFromForm

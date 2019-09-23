@@ -35,8 +35,8 @@ func (h *AuthController) process(w http.ResponseWriter, r *http.Request) map[str
 			http.Redirect(w, r, fmt.Sprintf("/login"), http.StatusTemporaryRedirect)
 			return nil
 		}
-	case "article": //
-		//TODO:ロジックを追加
+	// case "article": //
+	//TODO:ロジックを追加
 	case "chat":
 		userCookie, _ := r.Cookie("user")
 		authCookie, _ := r.Cookie("auth")

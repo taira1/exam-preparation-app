@@ -18,7 +18,6 @@ type LoginController struct {
 }
 
 func (c *LoginController) process(w http.ResponseWriter, r *http.Request) map[string]interface{} {
-	defer deleteCookieByName(w, r, "err")
 	c.htmlFilename = "login.html"
 	return map[string]interface{}{
 		"Err": getErrMessagesFromCookie(r),
@@ -41,12 +40,15 @@ func LoginHander(w http.ResponseWriter, r *http.Request) {
 			r.ParseForm()
 			userID := service.Authenticate(r.FormValue("email"), r.FormValue("password"))
 			if userID == -1 {
-				http.Error(w, fmt.Sprintf("認証を完了できませんでした。"), http.StatusInternalServerError)
-				return //TODO: エラーページへリダイレクトする
+				setNewErrMessageToCookie(w, r, "ログインできませんでした。メールアドレスとパスワードを確認してください。")
+				http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
+				return
 			}
 			user := infrastructure.InfrastructureOBJ.UserAccesser.FindByID(userID)
+			deleteCookieByName(w, r, "user")
 			setUserToCookie(w, user)
 			http.Redirect(w, r, fmt.Sprintf("/user/%d/profile", userID), http.StatusTemporaryRedirect)
+			return
 		default:
 			provider, err := gomniauth.Provider(provider)
 			if err != nil {
@@ -83,10 +85,6 @@ func LoginHander(w http.ResponseWriter, r *http.Request) {
 		authCookieValue := objx.New(map[string]interface{}{
 			"name": user.Name(),
 		}).MustBase64()
-		http.SetCookie(w, &http.Cookie{
-			Name:  "auth",
-			Value: authCookieValue,
-			Path:  "/"}) //TODO: Pathが"/"なのはセキュリティ上よくないので、厳密に指定する。
-		http.Redirect(w, r, "/chat", http.StatusTemporaryRedirect)
+		setValueToCookie(w, r, authCookieValue, "auth")
 	}
 }

@@ -16,6 +16,9 @@ type AuthService struct {
 // Authenticate 指定したemailアドレスが認証できた場合そのユーザのidを返します。認証に失敗した場合-1を返します。
 func Authenticate(email string, pass string) int {
 	authObj := infrastructure.InfrastructureOBJ.AuthAccesser.FindByEmail(email)
+	if authObj == nil {
+		return -1
+	}
 	if crypto.CompareHashAndPassword(authObj.Password, pass) {
 		return authObj.UserID
 	}
@@ -35,7 +38,6 @@ func (s *AuthService) ValidateAuth(email string) bool {
 
 // RegisterAuthUser 引数で受け取ったauth,Userを登録します。
 func RegisterAuthUser(auth *model.Auth, user *model.User) {
-	//TODO: 汚ないので書き直しする
 	dataAccess.Transact(infrastructure.InfrastructureOBJ.DBAgent.Conn, func(tx *sql.Tx) error {
 		var err error
 		userID := infrastructure.InfrastructureOBJ.UserAccesser.Insert(user)

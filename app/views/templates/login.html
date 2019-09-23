@@ -16,12 +16,11 @@
           <h3 class="panel-title">全ての機能を使うためにログインしてください</h3>
         </div>
         <div class="panel-body">
-            {{range .Err}}
+            {{if .Err}}
             <div class="alert alert-danger" role="alert">
-              <strong>エラー</strong>-{{.}}
+              <strong>エラー</strong>-{{.Err}}
             </div>
             {{end}}
-            
             <form action="/auth/login/default" method="post" class="form-horizontal">
                 <div class="form-group">
                     <label for="input_name" class="col-md-2 control-label">メールアドレス：</label>

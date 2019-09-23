@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <title>{{.Article.Title}}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header">
+        {{template "user_header" .}}{{include "../views/templates/user_header.html"}}
+      </div>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{.Article.Title}}</h3>
+            <p>投稿者: {{.Poster.Name}}</p>
+        </div>
+          <div class="panel-body">
+              {{if .Err}}
+              <div class="alert alert-danger" role="alert">
+                  <li><strong>エラー</strong>-{{.Err}}</li>
+              </div>
+              {{end}}
+              <div class="form-group">
+                  <label for="input_name" class="col-md-2 control-label">講義名：</label>
+                  <div class="col-md-10">
+                    <p>{{.Article.Class}}</p>
+                  </div>
+               </div>
+
+              <div class="form-group">
+                  <label for="input_name" class="col-md-2 control-label">担当教員：</label>
+                  <div class="col-md-10">
+                    <p>{{.Article.Teacher}}</p>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label for="input_name" class="col-md-2 control-label">アドバイス：</label>
+                  <div class="col-md-10">
+                      <p>{{.Article.Content}}</p>
+                  </div>
+              </div> 
+          </div>
+          <div class="panel-footer">
+              <p>投稿者: {{.Poster.Name}}</p>
+              <p>投稿者情報: {{.Poster.Education.Faculty.University.Name}}:{{.Poster.Education.Faculty.Name}}:{{.Poster.Education.Name}}</p>
+          </div>
+      </div>
+    </div>
+  </body>
+</html>

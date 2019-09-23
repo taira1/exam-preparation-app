@@ -1,6 +1,42 @@
 {{define "base_article_list"}}
-<ul class="list-group">
-        <li class="list-group-item"><a href="/user/{{.UserID}}/article/{{.ID}}/edit"><h4>{{.Title}}</h4></a></li>
-        <li class="list-group-item"><p>講義名:  {{.Class}}</p></li>
-</ul>
+<div class="list-group">
+    	<a href="/user/{{.UserID}}/article/{{.ID}}/edit" class="list-group-item list-group-item-action flex-column align-items-start">
+    		<div class="d-flex w-100 justify-content-between">
+    			<h5 class="mb-1">{{.Title}}</h5>
+    			<small>{{.LastUpdate}}</small>
+    		</div>
+			<p class="mb-1">科目: {{.Class}}</p>
+			<p class="mb-1">担当講師: {{.Teacher}}</p>
+			<!-- <small>Donec id elit non mi .</small> -->
+		</a>
+</div>
 {{end}}
+
+{{define "base_subject_article_list"}}
+<div class="list-group">
+    	<a href="/user/{{.UserID}}/article/{{.ID}}/other" class="list-group-item list-group-item-action flex-column align-items-start">
+    		<div class="d-flex w-100 justify-content-between">
+    			<h5 class="mb-1">{{.Title}}</h5>
+    			<small>{{.LastUpdate}}</small>
+    		</div>
+			<p class="mb-1">科目: {{.Class}}</p>
+			<p class="mb-1">担当講師: {{.Teacher}}</p>
+			<!-- <small>Donec id elit non mi .</small> -->
+		</a>
+</div>
+{{end}}
+
+{{define "base_public_article_list"}}
+<div class="list-group">
+    	<a href="/article/{{.ID}}" class="list-group-item list-group-item-action flex-column align-items-start">
+    		<div class="d-flex w-100 justify-content-between">
+    			<h5 class="mb-1">{{.Title}}</h5>
+    			<small>{{.LastUpdate}}</small>
+    		</div>
+			<p class="mb-1">科目: {{.Class}}</p>
+			<p class="mb-1">担当講師: {{.Teacher}}</p>
+			<!-- <small>Donec id elit non mi .</small> -->
+		</a>
+</div>
+{{end}}
+

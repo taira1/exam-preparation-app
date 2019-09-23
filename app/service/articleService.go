@@ -5,7 +5,6 @@ import (
 	"exam-preparation-app/app/domain/model"
 	"exam-preparation-app/app/infrastructure"
 	"exam-preparation-app/app/infrastructure/dataAccess"
-	"log"
 )
 
 // ArticleService 記事サービスです
@@ -38,10 +37,8 @@ func NewArticleService() *ArticleService {
 
 // RegisterArticle 引数で指定したarticleをDBに保存します。
 func (s *ArticleService) RegisterArticle(article *model.Article) {
-	if err := dataAccess.Transact(infrastructure.InfrastructureOBJ.DBAgent.Conn, func(tx *sql.Tx) error {
+	dataAccess.Transact(infrastructure.InfrastructureOBJ.DBAgent.Conn, func(tx *sql.Tx) error {
 		return infrastructure.InfrastructureOBJ.ArticleAccesser.Insert(article)
-	}); err != nil {
-		log.Fatalf("error:%#v", err)
-	}
+	})
 
 }

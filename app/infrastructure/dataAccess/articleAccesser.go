@@ -16,7 +16,7 @@ type ArticleAccesser struct {
 func (a *ArticleAccesser) FindByUserID(userID int) []model.Article {
 	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM article WHERE user_id = %d;", userID))
 	if err != nil {
-		log.Fatalf("データの取得に失敗しました。%#v", err)
+		log.Printf(failedToGetData.value, err)
 		return nil
 	}
 	defer rows.Close()
@@ -26,12 +26,69 @@ func (a *ArticleAccesser) FindByUserID(userID int) []model.Article {
 	layout := "2006-01-02 15:04:05"
 	for rows.Next() {
 		if err := rows.Scan(&article.ID, &article.UserID, &datetime, &article.Title, &article.Class, &article.Teacher, &article.Content, &article.Status); err != nil {
-			log.Fatalf("クエリの発行に失敗しました。%#v", err)
+			log.Printf(failedToGetData.value, err)
 			return nil
 		}
 		t, err := time.Parse(layout, datetime)
 		if err != nil {
-			log.Fatalf("lastUpdateのパースに失敗しました。%#v", err)
+			log.Printf(failedToGetData.value, err)
+			return nil
+		}
+		article.LastUpdate = t
+		articlesResult = append(articlesResult, article)
+	}
+	return articlesResult
+}
+
+// FindBySubjectIDAndStatusIsPublic 指定したsubjectIDのstatusがpublicである記事を全て取得します。
+func (a *ArticleAccesser) FindBySubjectIDAndStatusIsPublic(subjectID int) []model.Article {
+	query := "SELECT a.id, a.user_id, a.lastupdate, a.title, a.class, a.teacher, a.content, a.status FROM user AS u INNER JOIN article AS a ON u.id = a.user_id INNER JOIN subject AS s ON u.education_id = s.id WHERE s.id = %d AND a.status = 'public';"
+	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf(query, subjectID))
+	if err != nil {
+		log.Printf(failedToGetData.value, err)
+		return nil
+	}
+	defer rows.Close()
+	var articlesResult []model.Article
+	var datetime string
+	article := model.Article{}
+	layout := "2006-01-02 15:04:05"
+	for rows.Next() {
+		if err := rows.Scan(&article.ID, &article.UserID, &datetime, &article.Title, &article.Class, &article.Teacher, &article.Content, &article.Status); err != nil {
+			log.Printf(failedToGetData.value, err)
+			return nil
+		}
+		t, err := time.Parse(layout, datetime)
+		if err != nil {
+			log.Printf(failedToGetData.value, err)
+			return nil
+		}
+		article.LastUpdate = t
+		articlesResult = append(articlesResult, article)
+	}
+	return articlesResult
+}
+
+// FindByStatusIsPublic statusがpublicのArticleを全て取得します。
+func (a *ArticleAccesser) FindByStatusIsPublic() []model.Article {
+	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM article WHERE status = '%s';", "public"))
+	if err != nil {
+		log.Printf(failedToGetData.value, err)
+		return nil
+	}
+	defer rows.Close()
+	var articlesResult []model.Article
+	var datetime string
+	article := model.Article{}
+	layout := "2006-01-02 15:04:05"
+	for rows.Next() {
+		if err := rows.Scan(&article.ID, &article.UserID, &datetime, &article.Title, &article.Class, &article.Teacher, &article.Content, &article.Status); err != nil {
+			log.Printf(failedToGetData.value, err)
+			return nil
+		}
+		t, err := time.Parse(layout, datetime)
+		if err != nil {
+			log.Printf(failedToGetData.value, err)
 			return nil
 		}
 		article.LastUpdate = t
@@ -44,7 +101,7 @@ func (a *ArticleAccesser) FindByUserID(userID int) []model.Article {
 func (a *ArticleAccesser) FindByID(ID int) *model.Article {
 	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM article WHERE id = %d;", ID))
 	if err != nil {
-		log.Fatalf("データの取得に失敗しました。%#v", err)
+		log.Printf(failedToGetData.value, err)
 		return nil
 	}
 	defer rows.Close()
@@ -53,12 +110,12 @@ func (a *ArticleAccesser) FindByID(ID int) *model.Article {
 	layout := "2006-01-02 15:04:05"
 	for rows.Next() {
 		if err := rows.Scan(&article.ID, &article.UserID, &datetime, &article.Title, &article.Class, &article.Teacher, &article.Content, &article.Status); err != nil {
-			log.Fatalf("クエリの発行に失敗しました。%#v", err)
+			log.Printf(failedToGetData.value, err)
 			return nil
 		}
 		t, err := time.Parse(layout, datetime)
 		if err != nil {
-			log.Fatalf("lastUpdateのパースに失敗しました。%#v", err)
+			log.Printf(failedToGetData.value, err)
 			return nil
 		}
 		article.LastUpdate = t
@@ -70,21 +127,21 @@ func (a *ArticleAccesser) FindByID(ID int) *model.Article {
 func (a *ArticleAccesser) Update(ar *model.Article) bool {
 	_, err := a.DBAgent.Conn.Exec("UPDATE article SET title = ?, class = ?, teacher = ?, content = ?, status = ? WHERE id = ?;", ar.Title, ar.Class, ar.Teacher, ar.Content, ar.Status, ar.ID)
 	if err != nil {
-		log.Fatal(err)
+		log.Printf(failedToUpdateData.value, err)
 		return false
 	}
 	return true
 }
 
-// Insert 引数で受け取ったauth,Userをインサートします。
+// Insert 引数で受け取ったarticleをインサートします。
 func (a *ArticleAccesser) Insert(ar *model.Article) error {
 	ins, err := a.DBAgent.Conn.Prepare("INSERT INTO article(user_id, title, class, teacher, content, status) VALUES(?,?,?,?,?,?)")
 	if err != nil {
-		log.Fatal(err)
+		log.Printf(failedToInsertData.value, err)
 		return err
 	}
 	if _, err := ins.Exec(ar.UserID, ar.Title, ar.Class, ar.Teacher, ar.Content, ar.Status); err != nil {
-		log.Fatal(err)
+		log.Printf(failedToInsertData.value, err)
 		return err
 	}
 	return nil
@@ -94,11 +151,11 @@ func (a *ArticleAccesser) Insert(ar *model.Article) error {
 func (a *ArticleAccesser) DeleteByID(id int) bool {
 	del, err := a.DBAgent.Conn.Prepare("DELETE FROM article WHERE id = ?")
 	if err != nil {
-		log.Fatal(err)
+		log.Printf(failedToDeleteData.value, err)
 		return false
 	}
 	if _, err := del.Exec(id); err != nil {
-		log.Fatal(err)
+		log.Printf(failedToDeleteData.value, err)
 		return false
 	}
 	return true

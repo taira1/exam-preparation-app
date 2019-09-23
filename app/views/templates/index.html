@@ -5,16 +5,17 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   </head>
   <body>
-    <div class="container">
-      <div class="page-header">
-          {{template "header" .}}{{include "../views/templates/header.html"}}
-      </div>
-      <h1>大学定期試験試験情報サイトZuru</h1>
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">定期試験の情報を共有しよう</h3>
+    <div class="page-header">
+        {{template "header" .}}{{include "../views/templates/header.html"}}
+    </div>
+    <main role="main">
+      <div class="jumbotron">
+        <div class="container">
+          <h1 class="display-3">大学試験情報共有サイトZuru</h1>
+          <p>定期試験の情報を共有しよう</p>
+          <p><a class="btn btn-default btn-lg" href="/signup" role="button">サインアップ</a></p>
         </div>
       </div>
-    </div>
+    </main>
   </body>
 </html>

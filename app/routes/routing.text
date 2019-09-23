@@ -9,8 +9,15 @@
 /user/id/article/id/edit-------my記事編集
 /user/id/article/id/post-------my記事編集のpost
 /user/id/article/id/complete---my記事編集完了
-/article/id--------------------記事詳細
+/user/id/article/id/other------学科記事詳細
+/user/id/article/other---------学科記事一覧
 
+
+/user/id/subject---------------chatか記事か選択
+/user/id/subject/article/
+
+
+/article/id--------------------記事詳細
 /chat--------------------------自分の学科で開かれているチャットルーム一覧を表示
 /chat/id-----------------------roomに入る。
 /chat/id/exit------------------roomから退出。

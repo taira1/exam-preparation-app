@@ -30,13 +30,13 @@ func GetAutoNumberedID(dbAgent *DBAgent) int {
 	AutoNumberedID := -1
 	rows, err := dbAgent.Conn.Query("SELECT LAST_INSERT_ID()")
 	if err != nil {
-		log.Println("データの取得に失敗しました。")
+		log.Printf(failedToGetData.value, err)
 		return AutoNumberedID
 	}
 	defer rows.Close()
 	for rows.Next() {
 		if err := rows.Scan(&AutoNumberedID); err != nil {
-			log.Println("クエリの発行に失敗しました。")
+			log.Printf(failedToGetData.value, err)
 		}
 	}
 	return AutoNumberedID

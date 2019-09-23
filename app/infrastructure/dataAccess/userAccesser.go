@@ -16,7 +16,7 @@ type UserAccesser struct {
 func (a *UserAccesser) FindBySubjectID(subjectID int) []model.User {
 	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM user WHERE subject_id = %d;", subjectID))
 	if err != nil {
-		log.Fatalf("データの取得に失敗しました。%#v", err)
+		log.Printf(failedToGetData.value, err)
 		return nil
 	}
 	defer rows.Close()
@@ -24,7 +24,7 @@ func (a *UserAccesser) FindBySubjectID(subjectID int) []model.User {
 	for rows.Next() {
 		user := model.User{}
 		if err := rows.Scan(&user.ID, &user.Name); err != nil {
-			log.Fatalf("クエリの発行に失敗しました。%#v", err)
+			log.Printf(failedToGetData.value, err)
 		}
 		user.Education = a.SubjectAccesser.FindByID(subjectID)
 		userResult = append(userResult, user)
@@ -36,7 +36,7 @@ func (a *UserAccesser) FindBySubjectID(subjectID int) []model.User {
 func (a *UserAccesser) FindByID(ID int) *model.User {
 	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM user WHERE id = %d;", ID))
 	if err != nil {
-		log.Fatalf("データの取得に失敗しました。%#v", err)
+		log.Printf(failedToGetData.value, err)
 		return nil
 	}
 	defer rows.Close()
@@ -44,7 +44,7 @@ func (a *UserAccesser) FindByID(ID int) *model.User {
 	var subjectID int
 	for rows.Next() {
 		if err := rows.Scan(&user.ID, &user.Name, &user.Comment, &subjectID); err != nil {
-			log.Fatalf("クエリの発行に失敗しました。%#v", err)
+			log.Printf(failedToGetData.value, err)
 		}
 		user.Education = a.SubjectAccesser.FindByID(subjectID)
 	}
@@ -55,12 +55,12 @@ func (a *UserAccesser) FindByID(ID int) *model.User {
 func (a *UserAccesser) Insert(u *model.User) int {
 	ins, err := a.DBAgent.Conn.Prepare("INSERT INTO user(name,comment,education_id) VALUES(?,?,?)")
 	if err != nil {
-		log.Fatal(err)
+		log.Printf(failedToInsertData.value, err)
 		err = nil
 		return -1
 	}
 	if _, e := ins.Exec(u.Name, u.Comment, u.Education.ID); e != nil {
-		log.Fatal(e)
+		log.Printf(failedToInsertData.value, err)
 		return -1
 	}
 	return GetAutoNumberedID(a.DBAgent)
@@ -70,7 +70,7 @@ func (a *UserAccesser) Insert(u *model.User) int {
 func (a *UserAccesser) Update(u *model.User) bool {
 	_, err := a.DBAgent.Conn.Exec("UPDATE user SET name = ?, comment = ? WHERE id = ?;", u.Name, u.Comment, u.ID)
 	if err != nil {
-		log.Fatal(err)
+		log.Printf(failedToUpdateData.value, err)
 		return false
 	}
 	return true

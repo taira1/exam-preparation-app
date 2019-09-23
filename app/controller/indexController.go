@@ -12,6 +12,8 @@ type IndexController struct {
 
 func (c *IndexController) process(w http.ResponseWriter, r *http.Request) map[string]interface{} {
 	c.htmlFilename = "index.html"
+	deleteCookieByName(w, r, "err")
+
 	return nil
 }
 

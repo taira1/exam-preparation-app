@@ -15,19 +15,19 @@ type AuthAccesser struct {
 func (a *AuthAccesser) FindByEmail(email string) *model.Auth {
 	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM auth WHERE email = '%s';", email))
 	if err != nil {
-		log.Fatalf("データの取得に失敗しました。%#v", err)
+		log.Printf(failedToGetData.value, err)
 		return nil
 	}
 	defer rows.Close()
 	auth := model.Auth{}
 	for rows.Next() {
 		if err := rows.Scan(&auth.ID, &auth.Email, &auth.Password, &auth.UserID); err != nil {
-			log.Fatalf("クエリの発行に失敗しました。%#v", err)
+			log.Printf(failedToGetData.value, err)
 			return nil
 		}
 	}
 	if auth.ID == 0 {
-		log.Println("指定したemailは未登録です。")
+		log.Println("指定したemailは未登録です")
 		return nil
 	}
 	return &auth
@@ -37,11 +37,11 @@ func (a *AuthAccesser) FindByEmail(email string) *model.Auth {
 func (a *AuthAccesser) Insert(auth *model.Auth, userID int) {
 	ins, err := a.DBAgent.Conn.Prepare("INSERT INTO auth(email,password,user_id) VALUES(?,?,?)")
 	if err != nil {
-		log.Fatal(err)
+		log.Printf(failedToInsertData.value, err)
 		err = nil
 		return
 	}
 	if _, e := ins.Exec(auth.Email, auth.Password, userID); e != nil {
-		log.Fatal(err)
+		log.Printf(failedToInsertData.value, err)
 	}
 }

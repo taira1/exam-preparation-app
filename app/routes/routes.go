@@ -8,6 +8,8 @@ import (
 // RegisterTheHandler 各種ハンドラをhttp.Handleに登録します。
 func RegisterTheHandler() {
 	http.Handle("/", controller.NewTemplateHandler(&controller.IndexController{}))
+	http.Handle("/error", controller.NewTemplateHandler(&controller.ErrController{}))
+	http.Handle("/article/", controller.NewTemplateHandler(&controller.ArticleController{}))
 	http.HandleFunc("/auth/", controller.LoginHander)
 	http.Handle("/login", controller.NewTemplateHandler(&controller.LoginController{}))
 	http.Handle("/logout", controller.NewTemplateHandler(&controller.LogoutController{}))

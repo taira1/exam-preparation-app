@@ -17,10 +17,10 @@ type DBAgent struct {
 func NewDbAgent() *DBAgent {
 	c, err := getDBConnection()
 	if err == nil {
-		log.Println("DbAgentを生成しました")
+		log.Printf(generatedDbAgent.value)
 		return &DBAgent{Conn: c}
 	}
-	log.Fatalf("DbAgentを生成できませんでした %#v", err)
+	log.Printf(failedToGenerateDbAgent.value, err)
 	return nil
 }
 

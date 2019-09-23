@@ -6,18 +6,24 @@ import (
 	"github.com/stretchr/objx"
 )
 
-// // RedirectTo 指定したURLへリダイレクトします。
-// func RedirectTo(w http.ResponseWriter, URL string) {
-// 	w.Header().Set("Location", URL)
-// 	w.WriteHeader(http.StatusTemporaryRedirect)
-// }
-
 // setErrMessageToCookie エラーメッセージをクッキーにセットします。
 func setErrMessageToCookie(w http.ResponseWriter, r *http.Request, errMessage string) {
 	ErrCookieValue := objx.New(map[string]interface{}{
 		"Messages": errMessage,
 	}).MustBase64()
 	setValueToCookie(w, r, ErrCookieValue, "err")
+}
+
+// setNewErrMessageToCookie エラーメッセージをクッキーにセットします。
+func setNewErrMessageToCookie(w http.ResponseWriter, r *http.Request, errMessage string) {
+	ErrCookieValue := objx.New(map[string]interface{}{
+		"Messages": errMessage,
+	}).MustBase64()
+	http.SetCookie(w, &http.Cookie{
+		Name:  "err",
+		Value: ErrCookieValue,
+		Path:  "/"}) //TODO: Pathが"/"なのはセキュリティ上よくないので、厳密に指定する。
+
 }
 
 // getErrMessagesFromCookie Cookieからエラーメッセージを取得します。
@@ -48,16 +54,6 @@ type confirmeInfo struct {
 	Message       string
 	ButtonMessage string
 }
-
-// newConfirmeInfo confirmeInfoのコンストラクタです
-// func newConfirmeInfo(url string, t string, m string, b string) *confirmeInfo {
-// 	return &confirmeInfo{
-// 		NextURL:       url,
-// 		Title:         t,
-// 		Message:       m,
-// 		ButtonMessage: b,
-// 	}
-// }
 
 func setConfirmeInfoToCookie(w http.ResponseWriter, r *http.Request, value *confirmeInfo) {
 	confirmeInfoCookieValue := objx.New(map[string]interface{}{

@@ -14,9 +14,7 @@
             <h3 class="panel-title">記事一覧</h3>
         </div>
           <div class="panel-body">
-            {{range .Articles}}
                 {{template "base_subject_article_list" . }}{{include "../views/templates/base_article_list.html"}}
-            {{end}}
           </div>
       </div>
     </div>

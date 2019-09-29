@@ -13,7 +13,7 @@ Zuruは過去問の掲載を主軸足した大学の定期試験対策のため�
 
 # デモ
 
-
+![demo](https://raw.github.com/wiki/yuki-inoue-eng/exam-preparation--app/images/exam-preparation-app.gif)
 
 # 使用技術
 

@@ -43,75 +43,62 @@ Zuruは過去問の掲載を主軸足した大学の定期試験対策のため�
 下記の定義に基づいたDBテーブルが必要です。
 
 データベース名  
-mysql> select database();  
-+------------------+  
+mysql> select database();    
 | database()       |  
-+------------------+  
+----
 | exam_preparation |  
-+------------------+  
 
 
 大学テーブル  
-mysql> describe university;  
-+-------+--------------+------+-----+---------+----------------+  
+mysql> describe university;    
 | Field | Type         | Null | Key | Default | Extra          |  
-+-------+--------------+------+-----+---------+----------------+  
+----|----|----|----|----|----  
 | id    | int(11)      | NO   | PRI | NULL    | auto_increment |  
-| name  | varchar(100) | NO   |     | NULL    |                |  
-+-------+--------------+------+-----+---------+----------------+  
+| name  | varchar(100) | NO   |     | NULL    |                |    
 
 
 学部テーブル  
-mysql> describe faculty;  
-+---------------+--------------+------+-----+---------+----------------+  
+mysql> describe faculty;   
 | Field         | Type         | Null | Key | Default | Extra          |  
-+---------------+--------------+------+-----+---------+----------------+  
+----|----|----|----|----|----  
 | id            | int(11)      | NO   | PRI | NULL    | auto_increment |  
 | name          | varchar(100) | NO   |     | NULL    |                |  
-| university_id | int(11)      | NO   |     | NULL    |                |  
-+---------------+--------------+------+-----+---------+----------------+  
+| university_id | int(11)      | NO   |     | NULL    |                |    
 
 
 学科テーブル  
 mysql> describe subject;  
-+------------+--------------+------+-----+---------+----------------+  
 | Field      | Type         | Null | Key | Default | Extra          |  
-+------------+--------------+------+-----+---------+----------------+  
+----|----|----|----|----|----  
 | id         | int(11)      | NO   | PRI | NULL    | auto_increment |  
 | name       | varchar(100) | NO   |     | NULL    |                |  
 | faculty_id | int(11)      | NO   |     | NULL    |                |  
-+------------+--------------+------+-----+---------+----------------+  
 
 
 ユーザテーブル  
 mysql> describe user;  
-+--------------+--------------+------+-----+---------+----------------+  
 | Field        | Type         | Null | Key | Default | Extra          |  
-+--------------+--------------+------+-----+---------+----------------+  
+----|----|----|----|----|----
 | id           | int(11)      | NO   | PRI | NULL    | auto_increment |  
 | name         | varchar(100) | NO   |     | NULL    |                |  
 | comment      | varchar(200) | NO   |     | NULL    |                |  
 | education_id | int(11)      | NO   |     | NULL    |                |  
-+--------------+--------------+------+-----+---------+----------------+  
 
 
 ユーザ認証情報テーブル  
 mysql> describe auth;  
-+----------+--------------+------+-----+---------+----------------+  
 | Field    | Type         | Null | Key | Default | Extra          |  
-+----------+--------------+------+-----+---------+----------------+  
+----|----|----|----|----|----
 | id       | int(11)      | NO   | PRI | NULL    | auto_increment |  
 | email    | varchar(100) | NO   | UNI | NULL    |                |  
 | password | varchar(60)  | NO   |     | NULL    |                |  
 | user_id  | int(11)      | NO   |     | NULL    |                |  
-+----------+--------------+------+-----+---------+----------------+  
 
 
 記事テーブル  
 mysql> describe article;  
-+------------+-------------+------+-----+-------------------+-----------------------------------------------+  
 | Field      | Type        | Null | Key | Default           | Extra                                         |  
-+------------+-------------+------+-----+-------------------+-----------------------------------------------+  
+----|----|----|----|----|----
 | id         | int(11)     | NO   | PRI | NULL              | auto_increment                                |  
 | user_id    | int(11)     | NO   |     | NULL              |                                               |  
 | lastupdate | datetime    | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |  
@@ -120,7 +107,6 @@ mysql> describe article;
 | teacher    | text        | YES  |     | NULL              |                                               |  
 | content    | longtext    | YES  |     | NULL              |                                               |  
 | status     | varchar(20) | YES  |     | public            |                                               |  
-+------------+-------------+------+-----+-------------------+-----------------------------------------------+  
 
 
 ※ 上記のテーブル定義を行なった上で、適切に動作しない場合は下記ファイルの関数getDBConnection()内でDBコネクションを取得する際のURLが間違っている可能性があります。適切なURLに修正後コンパイルし直してください。

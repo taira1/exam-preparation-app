@@ -45,14 +45,14 @@ Zuruは過去問の掲載を主軸足した大学の定期試験対策のため�
 データベース名  
 mysql> select database();    
 | database()       |
-| --- |
+|------------------|
 | exam_preparation |
 
 
 大学テーブル  
 mysql> describe university;    
 | Field | Type         | Null | Key | Default | Extra          |
-| --- | --- | --- | --- | --- | --- |
+|-------|--------------|------|-----|---------|----------------|
 | id    | int(11)      | NO   | PRI | NULL    | auto_increment |
 | name  | varchar(100) | NO   |     | NULL    |                |
 
@@ -60,7 +60,7 @@ mysql> describe university;
 学部テーブル  
 mysql> describe faculty;   
 | Field         | Type         | Null | Key | Default | Extra          |
-| --- | --- | --- | --- | --- | --- |
+|---------------|--------------|------|-----|---------|----------------|
 | id            | int(11)      | NO   | PRI | NULL    | auto_increment |
 | name          | varchar(100) | NO   |     | NULL    |                |
 | university_id | int(11)      | NO   |     | NULL    |                |
@@ -69,7 +69,7 @@ mysql> describe faculty;
 学科テーブル  
 mysql> describe subject;  
 | Field      | Type         | Null | Key | Default | Extra          |
-| --- | --- | --- | --- | --- | --- |
+|------------|--------------|------|-----|---------|----------------|
 | id         | int(11)      | NO   | PRI | NULL    | auto_increment |
 | name       | varchar(100) | NO   |     | NULL    |                |
 | faculty_id | int(11)      | NO   |     | NULL    |                |
@@ -78,7 +78,7 @@ mysql> describe subject;
 ユーザテーブル  
 mysql> describe user;  
 | Field        | Type         | Null | Key | Default | Extra          |
-| --- | --- | --- | --- | --- | --- |
+|--------------|--------------|------|-----|---------|----------------|
 | id           | int(11)      | NO   | PRI | NULL    | auto_increment |
 | name         | varchar(100) | NO   |     | NULL    |                |
 | comment      | varchar(200) | NO   |     | NULL    |                |
@@ -88,7 +88,7 @@ mysql> describe user;
 ユーザ認証情報テーブル  
 mysql> describe auth;  
 | Field    | Type         | Null | Key | Default | Extra          |
-| --- | --- | --- | --- | --- | --- |
+|----------|--------------|------|-----|---------|----------------|
 | id       | int(11)      | NO   | PRI | NULL    | auto_increment |
 | email    | varchar(100) | NO   | UNI | NULL    |                |
 | password | varchar(60)  | NO   |     | NULL    |                |
@@ -98,7 +98,7 @@ mysql> describe auth;
 記事テーブル  
 mysql> describe article;  
 | Field      | Type        | Null | Key | Default           | Extra                                         |
-| --- | --- | --- | --- | --- | --- |
+|------------|-------------|------|-----|-------------------|-----------------------------------------------|
 | id         | int(11)     | NO   | PRI | NULL              | auto_increment                                |
 | user_id    | int(11)     | NO   |     | NULL              |                                               |
 | lastupdate | datetime    | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |

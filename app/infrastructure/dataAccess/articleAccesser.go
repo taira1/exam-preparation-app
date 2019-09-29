@@ -42,7 +42,7 @@ func (a *ArticleAccesser) FindByUserID(userID int) []model.Article {
 
 // FindBySubjectIDAndStatusIsPublic 指定したsubjectIDのstatusがpublicである記事を全て取得します。
 func (a *ArticleAccesser) FindBySubjectIDAndStatusIsPublic(subjectID int) []model.Article {
-	query := "SELECT a.id, a.user_id, a.lastupdate, a.title, a.class, a.teacher, a.content, a.status FROM user AS u INNER JOIN article AS a ON u.id = a.user_id INNER JOIN subject AS s ON u.education_id = s.id WHERE s.id = %d AND a.status = 'public';"
+	query := "SELECT a.id, a.user_id, a.lastupdate, a.title, a.class, a.teacher, a.content, a.status FROM user AS u INNER JOIN article AS a ON u.id = a.user_id INNER JOIN subject AS s ON u.education_id = s.id WHERE s.id = %d AND a.status = 'public' ORDER BY lastupdate DESC;"
 	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf(query, subjectID))
 	if err != nil {
 		log.Printf(failedToGetData.value, err)
@@ -71,7 +71,7 @@ func (a *ArticleAccesser) FindBySubjectIDAndStatusIsPublic(subjectID int) []mode
 
 // FindByStatusIsPublic statusがpublicのArticleを全て取得します。
 func (a *ArticleAccesser) FindByStatusIsPublic() []model.Article {
-	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM article WHERE status = '%s';", "public"))
+	rows, err := a.DBAgent.Conn.Query(fmt.Sprintf("SELECT * FROM article WHERE status = '%s' ORDER BY lastupdate DESC;", "public"))
 	if err != nil {
 		log.Printf(failedToGetData.value, err)
 		return nil
